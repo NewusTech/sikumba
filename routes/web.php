@@ -35,6 +35,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\VerificationAccountController;
 use App\Http\Controllers\SurveyController;
 use App\Http\Controllers\LogoController;
+use App\Http\Controllers\KontakController;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -110,6 +111,10 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/logo', [LogoController::class, 'show'])->name('logo');
     Route::post('/data-logo', [LogoController::class, 'createOrUpdate'])->name('data-logo.create');
+
+    Route::get('/kontak', [KontakController::class, 'show'])->name('kontak');
+    Route::post('/kontak', [KontakController::class, 'createOrUpdate'])->name('kontak.create');
+    Route::post('/kontak/update', [KontakController::class, 'update'])->name('kontak.update');
 
     Route::get('/review-user', [SurveyController::class, 'indexhome'])->name('review-user');
     Route::get('/review-user-search', [SurveyController::class, 'indexsearch'])->name('review-user-search');
