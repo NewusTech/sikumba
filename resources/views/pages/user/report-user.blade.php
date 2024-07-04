@@ -203,50 +203,40 @@
                                             @if ($item->type == 1)
                                                 {{-- DIantar --}}
                                                 @if ($item->status == 8)
-                                                    @if ($item->user_confirm == 0)
+                                                    @if ($item->admin_confirm == 0)
                                                         <button
-                                                            onclick="openUploadModal({{ $item->id }}, '{{ $item->berkas ? asset('storage/' . $item->berkas) : '' }}')"
+                                                            onclick="openUploadModal({{ $item->id }}, '{{ $item->bukti_pembayaran_pengujian ? asset('storage/' . $item->bukti_pembayaran_pengujian) : '' }}')"
                                                             class="btn btn-primary mb-0">Konfirmasi
                                                             Pembayaran</button>
-                                                        {{-- <form action="{{ route('approveBayar', ['id' => $item->id]) }}"
-                                                            method="post">
-                                                            @csrf
-                                                            <button type="submit" class="btn btn-primary mb-0"
-                                                                onclick="return confirm('Apakah Anda yakin ingin melanjutkan?')">Konfirmasi
-                                                                <br> Pembayaran?</button>
-                                                        </form> --}}
-                                                    @elseif ($item->user_confirm == 1)
-                                                        @if ($item->admin_confirm == 0)
-                                                            <span>Menunggu konfirmasi <br> pembayaran</span>
-                                                        @elseif($item->admin_confirm == 1)
+                                                    @elseif ($item->admin_confirm == 1)
                                                             <span class="text-success">Proses selesai</span>
-                                                        @endif
                                                     @endif
+                                                @elseif ($item->status == 0 && $item->status == 1)
+                                                    <span>Sedang diproses</span>
+                                                @elseif ($item->status == 2)
+                                                    <span>Pengambilan contoh</span>
+                                                @elseif ($item->status >= 3 && $item->status <= 7)
+                                                    <span>Sedang pengujian</span>
                                                 @else
                                                     <span>Sedang diproses</span>
                                                 @endif
                                             @elseif ($item->type == 2)
                                                 {{-- DIambil --}}
                                                 @if ($item->status == 9)
-                                                    @if ($item->user_confirm == 0)
+                                                    @if ($item->admin_confirm == 0)
                                                         <button
-                                                            onclick="openUploadModal({{ $item->id }}, '{{ $item->berkas ? asset('storage/' . $item->berkas) : '' }}')"
+                                                            onclick="openUploadModal({{ $item->id }}, '{{ $item->bukti_pembayaran_pengujian ? asset('storage/' . $item->bukti_pembayaran_pengujian) : '' }}')"
                                                             class="btn btn-primary mb-0">Konfirmasi
                                                             Pembayaran</button>
-                                                        {{-- <form action="{{ route('approveBayar', ['id' => $item->id]) }}"
-                                                            method="post">
-                                                            @csrf
-                                                            <button type="submit" class="btn btn-primary mb-0"
-                                                                onclick="return confirm('Apakah Anda yakin ingin melanjutkan?')">Konfirmasi
-                                                                <br> Pembayaran?</button>
-                                                        </form> --}}
-                                                    @elseif ($item->user_confirm == 1)
-                                                        @if ($item->admin_confirm == 0)
-                                                            <span>Menunggu konfirmasi <br> pembayaran</span>
-                                                        @elseif($item->admin_confirm == 1)
+                                                    @elseif ($item->admin_confirm == 1)
                                                             <span class="text-success">Proses selesai</span>
-                                                        @endif
                                                     @endif
+                                                @elseif ($item->status == 0 && $item->status == 1)
+                                                    <span>Sedang diproses</span>
+                                                @elseif ($item->status == 2)
+                                                    <span>Pengambilan contoh</span>
+                                                @elseif ($item->status >= 3 && $item->status <= 8)
+                                                    <span>Sedang pengujian</span>
                                                 @else
                                                     <span>Sedang diproses</span>
                                                 @endif
@@ -254,7 +244,7 @@
                                         </td>
                                         <td class="text-center text-nowrap border">
                                             @if ($item->type == 1)
-                                                @if ($item->status == 8 && $item->user_confirm == 1 && $item->admin_confirm == 1)
+                                                @if ($item->status == 8 && $item->admin_confirm == 1)
                                                     @if ($item->done_survey == 0)
                                                         <button type="button" class="btn btn-primary mt-3"
                                                             data-toggle="modal" data-target="#surveyModal"
@@ -278,11 +268,17 @@
                                                             -
                                                         @endif
                                                     @endif
+                                                @elseif ($item->status == 0 && $item->status == 1)
+                                                    <span>Sedang diproses</span>
+                                                @elseif ($item->status == 2)
+                                                    <span>Pengambilan contoh</span>
+                                                @elseif ($item->status >= 3 && $item->status <= 7)
+                                                    <span>Sedang pengujian</span>
                                                 @else
                                                     <span>Sedang diproses</span>
                                                 @endif
                                             @elseif ($item->type == 2)
-                                                @if ($item->status == 9 && $item->user_confirm == 1 && $item->admin_confirm == 1)
+                                                @if ($item->status == 9 && $item->admin_confirm == 1)
                                                     @if ($item->done_survey == 0)
                                                         <button type="button" class="btn btn-primary mt-3"
                                                             data-toggle="modal" data-target="#surveyModal"
@@ -306,6 +302,12 @@
                                                             -
                                                         @endif
                                                     @endif
+                                                @elseif ($item->status == 0 && $item->status == 1)
+                                                    <span>Sedang diproses</span>
+                                                @elseif ($item->status == 2)
+                                                    <span>Pengambilan contoh</span>
+                                                @elseif ($item->status >= 3 && $item->status <= 8)
+                                                    <span>Sedang pengujian</span>
                                                 @else
                                                     <span>Sedang diproses</span>
                                                 @endif
