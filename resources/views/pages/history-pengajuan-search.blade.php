@@ -4,17 +4,9 @@
             <th class="border text-center">Name</th>
             <th class="border text-center">Commodity</th>
             <th class="border text-center">Date</th>
-            <th class="border text-center">Sealing Mark</th>
-            <th class="border text-center">Report Sealing</th>
             <th class="border text-center">Consignment Commodity</th>
             <th class="border text-center">Identification</th>
             <th class="border text-center">Exporting Comp</th>
-            <th class="border text-center">Address</th>
-            <th class="border text-center">Regist Number</th>
-            <th class="border text-center">Type Packing</th>
-            <th class="border text-center">Qty Package</th>
-            <th class="border text-center">Weight</th>
-            <th class="border text-center">Volume</th>
             <th class="border text-center">Type</th>
             <th class="border text-center">Status</th>
             @if ($rolename->name != 'Analis')
@@ -31,17 +23,9 @@
                 <td class="border">{{ $item->name }}</td>
                 <td class="border">{{ $item->type_commodity }}</td>
                 <td class="border">{{ $item->date }}</td>
-                <td class="border">{{ $item->sealing_mark }}</td>
-                <td class="border">{{ $item->report_sealing }}</td>
                 <td class="border">{{ $item->consignment_commodity }}</td>
                 <td class="border">{{ $item->identification }}</td>
                 <td class="border">{{ $item->exporting_comp }}</td>
-                <td class="border">{{ $item->address }}</td>
-                <td class="border">{{ $item->regist_number }}</td>
-                <td class="border">{{ $item->type_packing }}</td>
-                <td class="border">{{ $item->qty_package }}</td>
-                <td class="border">{{ $item->weight }}</td>
-                <td class="border">{{ $item->volume }}</td>
                 <td class="border">
                     @if ($item->type == 1)
                         Diantar

@@ -6,8 +6,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
-                    <form role="form" method="POST" action={{ route('kontak.create') }}
-                        enctype="multipart/form-data">
+                    <form role="form" method="POST" action={{ route('kontak.create') }} enctype="multipart/form-data">
                         @csrf
                         <div class="card-header pb-0">
                             <div class="d-flex align-items-center">
@@ -25,7 +24,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="example-text-input" class="form-control-label">No Telephone</label>
-                                        {{-- <input class="form-control" type="text" name="kepala_dinas" value="{{ old('$sertification->kepala_dinas', auth()->check() ? auth()->user()->kepala_dinas : '' )}}"> --}}
+                                        <small class="text-xs">(Format no. telp = 628XXXXXXXXXXX)</small>
                                         <input class="form-control" type="text" name="no_telephone"
                                             value="{{ isset($kontak->no_telephone) ? $kontak->no_telephone : '' }}">
                                         @error('no_telephone')
