@@ -535,5 +535,11 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
+        DB::table('kontak')->insert([
+            'no_telephone' => '82279359324',
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+
     }
 }

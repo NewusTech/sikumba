@@ -171,9 +171,6 @@
                                     <th class="border">Exporting Comp</th>
                                     <th class="border">Regist Number</th>
                                     <th class="border">Type Packing</th>
-                                    <th class="border">Qty Package</th>
-                                    <th class="border">Weight</th>
-                                    <th class="border text-center">Volume</th>
                                     <th class="border text-center">Type</th>
                                     <th class="border text-center">Status</th>
                                     <th class="border text-center">Berkas</th>
@@ -189,9 +186,6 @@
                                         <td class="border">{{ $item->exporting_comp }}</td>
                                         <td class="border">{{ $item->regist_number }}</td>
                                         <td class="border">{{ $item->type_packing }}</td>
-                                        <td class="border">{{ $item->qty_package }}</td>
-                                        <td class="border">{{ $item->weight }}</td>
-                                        <td class="border">{{ $item->volume }}</td>
                                         <td class="border">
                                             @if ($item->type == 1)
                                                 Diantar
