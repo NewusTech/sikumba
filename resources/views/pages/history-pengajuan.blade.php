@@ -361,15 +361,15 @@
                                                                 class="btn btn-secondary mb-0">Approval by UPTD??</button>
                                                         @endif
                                                     @elseif ($item->status == 9 && $item->admin_confirm == 0)
-                                                        @if ($item->user_confirm == 0)
+                                                        {{-- @if ($item->user_confirm == 0)
                                                             <span class="text-success">Menunggu <br> Pembayaran</span>
-                                                        @elseif ($item->user_confirm == 1)
+                                                        @elseif ($item->user_confirm == 1) --}}
                                                             <button
                                                                 onclick="openUploadModalApprove({{ $item->id }}, '{{ $item->bukti_pembayaran_pengujian ? asset('storage/' . $item->bukti_pembayaran_pengujian) : '' }}')"
                                                                 class="btn btn-primary mb-0">Sudah
                                                                 membayar... <br> Selesaikan ?</button>
-                                                        @endif
-                                                    @elseif ($item->status == 9 && $item->user_confirm == 1 && $item->admin_confirm == 1)
+                                                        {{-- @endif --}}
+                                                    @elseif ($item->status == 9 && $item->admin_confirm == 1)
                                                         <span class="text-success">Proses Selesai</span>
                                                     @endif
                                                 @endif
@@ -487,20 +487,16 @@
                                                                 class="btn btn-secondary mb-0">Approval by UPTD??</button>
                                                         @endif
                                                     @elseif ($item->status == 8 && $item->admin_confirm == 0)
-                                                        @if ($item->user_confirm == 0)
+                                                        {{-- @if ($item->user_confirm == 0)
                                                             <span class="text-success">Menunggu <br> Pembayaran</span>
-                                                        @elseif ($item->user_confirm == 1)
-                                                            {{-- <form
-                                                                action="{{ route('approveBayarAdmin', ['id' => $item->id]) }}"
-                                                                method="post">
-                                                                @csrf --}}
+                                                        @elseif ($item->user_confirm == 1) --}}
                                                             <button
                                                                 onclick="openUploadModalApprove({{ $item->id }}, '{{ $item->bukti_pembayaran_pengujian ? asset('storage/' . $item->bukti_pembayaran_pengujian) : '' }}')"
                                                                 class="btn btn-primary mb-0">Sudah
                                                                 membayar... <br> Selesaikan ?</button>
                                                             {{-- </form> --}}
-                                                        @endif
-                                                    @elseif ($item->status == 8 && $item->user_confirm == 1 && $item->admin_confirm == 1)
+                                                        {{-- @endif --}}
+                                                    @elseif ($item->status == 8 && $item->admin_confirm == 1)
                                                         <span class="text-success">Proses Selesai</span>
                                                     @endif
                                                 @endif
