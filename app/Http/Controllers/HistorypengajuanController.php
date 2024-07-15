@@ -136,7 +136,7 @@ class HistorypengajuanController extends Controller
     public function uploadAnalis(Request $request)
     {
         $request->validate([
-            'berkas_analis' => 'required|file|mimes:pdf,doc,docx,xls,xlsx|max:10000', // 2MB Max
+            'berkas_analis' => 'required|file|max:10000', // 2MB Max
         ]);
 
         $pengajuan = Pengajuan::find($request->pengajuan_idAnalis);
@@ -156,8 +156,14 @@ class HistorypengajuanController extends Controller
 
     public function edit($id)
     {
+        $userlogin = Auth::user()->id;
+        $roleuserlogin = RoleUser::where('user_id', $userlogin)->first();
+        $rolename = Role::where('id', $roleuserlogin->role_id)->first();
+
         $history = Pengajuan::find($id);
+
         return view('pages.edit-history', compact('history'), [
+            'rolename' => $rolename,
             'user' => Auth::user()
         ]);
     }
@@ -180,25 +186,15 @@ class HistorypengajuanController extends Controller
 
     public function update(Request $request, $id)
     {
-        // $request->validate([
-        //     'name' => 'required',
-        //     'date' => 'required',
-        //     'sealing_mark' => 'required',
-        //     'report_sealing' => 'required',
-        //     'consignment_commodity' => 'required',
-        //     'identification' => 'required',
-        //     'exporting_comp' => 'required',
-        //     'address' => 'required',
-        //     'regist_number' => 'required',
-        //     'type_commodity' => 'required',
-        //     'type_packing' => 'required',
-        //     'qty_package' => 'required',
-        //     'weight' => 'required',
-        //     'volume' => 'required',
-        //     // Sesuaikan validasi dengan kebutuhan Anda
-        // ]);
+        
+        if ($request->hasFile('file')) {
+            // Simpan foto yang baru diunggah
+            $file = $request->file('file');
+            $biaya = $file->store('biaya', 'public');
+        }
 
         $history = Pengajuan::find($id);
+        $history->biaya = $biaya ?? null;
         $history->name = $request->get('name');
         $history->date = $request->get('date');
         $history->sealing_mark = $request->get('sealing_mark');

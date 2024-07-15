@@ -172,6 +172,7 @@
                                     <th class="border">Regist Number</th>
                                     <th class="border">Type Packing</th>
                                     <th class="border text-center">Type</th>
+                                    <th class="border text-center">Biaya</th>
                                     <th class="border text-center">Status</th>
                                     <th class="border text-center">Berkas</th>
                                 </tr>
@@ -194,6 +195,15 @@
                                             @endif
                                         </td>
                                         <td class="text-center text-nowrap border">
+                                            @if ($item->biaya)
+                                                <a href="{{ asset('storage/' . $item->biaya) }}"
+                                                    class="mb-0 btn btn-success" target="_blank">Biaya</a>
+                                                <br>
+                                            @else
+                                                -
+                                            @endif
+                                        </td>
+                                        <td class="text-center text-nowrap border">
                                             @if ($item->type == 1)
                                                 {{-- DIantar --}}
                                                 @if ($item->status == 8)
@@ -203,7 +213,7 @@
                                                             class="btn btn-primary mb-0">Konfirmasi
                                                             Pembayaran</button>
                                                     @elseif ($item->admin_confirm == 1)
-                                                            <span class="text-success">Proses selesai</span>
+                                                        <span class="text-success">Proses selesai</span>
                                                     @endif
                                                 @elseif ($item->status == 0 && $item->status == 1)
                                                     <span>Sedang diproses</span>
@@ -223,7 +233,7 @@
                                                             class="btn btn-primary mb-0">Konfirmasi
                                                             Pembayaran</button>
                                                     @elseif ($item->admin_confirm == 1)
-                                                            <span class="text-success">Proses selesai</span>
+                                                        <span class="text-success">Proses selesai</span>
                                                     @endif
                                                 @elseif ($item->status == 0 && $item->status == 1)
                                                     <span>Sedang diproses</span>

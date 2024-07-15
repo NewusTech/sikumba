@@ -145,9 +145,9 @@
                         <div class="form-group">
                             <label for="berkas_analis">Choose</label>
                             <input type="file" class="form-control" id="berkas_analis" name="berkas_analis"
-                                onchange="previewFileAnalis(this);"
-                                accept="application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+                                onchange="previewFileAnalis(this);">
 
+                            <img id="previewImgAnalis" src="" style="max-width: 100%; display: none;">
                             <embed id="previewPdfAnalis" src="" type="application/pdf"
                                 style="width: 100%; height: 500px; display: none;">
                             <iframe id="previewWordAnalis" src=""
@@ -178,6 +178,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="berkas_analis">Berkas</label>
+                        <img id="previewImgAnalis2" src="" style="max-width: 100%; display: none;">
                         <iframe id="previewWordAnalis2" src=""
                             style="width: 0%; height: 0; display: none;"></iframe>
                         <embed id="previewPdfAnalis2" src="" type="application/pdf"
@@ -213,7 +214,7 @@
                             <embed id="previewPdfApprove" src="" type="application/pdf"
                                 style="width: 100%; height: 500px; display: none;">
                             <div id="imagePreviewApprove" style="display: none;">
-                                <img id="previewImage" src="" >
+                                <img id="previewImage" src="">
                             </div>
                         </div>
                     </div>
@@ -266,7 +267,7 @@
                         </a>
                     </div>
                 </div>
-                
+
                 <div class="card-body px-0 pt-0 pb-2">
                     <div class="table-responsive p-3" id="search-list">
                         <table class="table align-items-center mb-5">
@@ -348,10 +349,10 @@
                                                         {{-- @if ($item->user_confirm == 0)
                                                             <span class="text-success">Menunggu <br> Pembayaran</span>
                                                         @elseif ($item->user_confirm == 1) --}}
-                                                            <button
-                                                                onclick="openUploadModalApprove({{ $item->id }}, '{{ $item->bukti_pembayaran_pengujian ? asset('storage/' . $item->bukti_pembayaran_pengujian) : '' }}')"
-                                                                class="btn btn-primary mb-0">Sudah
-                                                                membayar... <br> Selesaikan ?</button>
+                                                        <button
+                                                            onclick="openUploadModalApprove({{ $item->id }}, '{{ $item->bukti_pembayaran_pengujian ? asset('storage/' . $item->bukti_pembayaran_pengujian) : '' }}')"
+                                                            class="btn btn-primary mb-0">Sudah
+                                                            membayar... <br> Selesaikan ?</button>
                                                         {{-- @endif --}}
                                                     @elseif ($item->status == 9 && $item->admin_confirm == 1)
                                                         <span class="text-success">Proses Selesai</span>
@@ -474,11 +475,11 @@
                                                         {{-- @if ($item->user_confirm == 0)
                                                             <span class="text-success">Menunggu <br> Pembayaran</span>
                                                         @elseif ($item->user_confirm == 1) --}}
-                                                            <button
-                                                                onclick="openUploadModalApprove({{ $item->id }}, '{{ $item->bukti_pembayaran_pengujian ? asset('storage/' . $item->bukti_pembayaran_pengujian) : '' }}')"
-                                                                class="btn btn-primary mb-0">Sudah
-                                                                membayar... <br> Selesaikan ?</button>
-                                                            {{-- </form> --}}
+                                                        <button
+                                                            onclick="openUploadModalApprove({{ $item->id }}, '{{ $item->bukti_pembayaran_pengujian ? asset('storage/' . $item->bukti_pembayaran_pengujian) : '' }}')"
+                                                            class="btn btn-primary mb-0">Sudah
+                                                            membayar... <br> Selesaikan ?</button>
+                                                        {{-- </form> --}}
                                                         {{-- @endif --}}
                                                     @elseif ($item->status == 8 && $item->admin_confirm == 1)
                                                         <span class="text-success">Proses Selesai</span>
@@ -948,6 +949,7 @@
             $('#uploadFormAnalis').trigger('reset');
             $('#previewPdfAnalis').hide(); // Sembunyikan pratinjau PDF terlebih dahulu
             $('#previewWordAnalis').hide();
+            $('#previewImgAnalis').hide();
 
             // Menentukan jenis file berdasarkan ekstensi
             var fileExtension = fileUrl.split('.').pop().toLowerCase();
@@ -956,9 +958,16 @@
                 if (fileExtension === 'pdf') {
                     $('#previewPdfAnalis').attr('src', fileUrl).show();
                     $('#previewWordAnalis').hide();
+                    $('#previewImgAnalis').hide();
+                } else if (fileExtension === 'jpg' || fileExtension === 'png' || fileExtension === 'jpeg' ||
+                    fileExtension === 'webp') {
+                    $('#previewImgAnalis').attr('src', fileUrl).show();
+                    $('#previewWordAnalis').hide();
+                    $('#previewPdfAnalis').hide();
                 } else {
                     $('#previewWordAnalis').attr('src', fileUrl).show();
                     $('#previewPdfAnalis').hide();
+                    $('#previewImgAnalis').hide();
                 }
             }
 
@@ -970,6 +979,8 @@
             $('#uploadFormAnalis').trigger('reset');
             $('#previewPdfAnalis2').hide();
             $('#previewWordAnalis2').hide();
+            $('#previewImgAnalis2').hide();
+
 
             // Menentukan jenis file berdasarkan ekstensi
             var fileExtension = fileUrl.split('.').pop().toLowerCase();
@@ -978,9 +989,16 @@
                 if (fileExtension === 'pdf') {
                     $('#previewPdfAnalis2').attr('src', fileUrl).show();
                     $('#previewWordAnalis2').hide();
+                    $('#previewImgAnalis2').hide();
+                } else if (fileExtension === 'jpg' || fileExtension === 'png' || fileExtension === 'jpeg' ||
+                    fileExtension === 'webp') {
+                    $('#previewImgAnalis2').attr('src', fileUrl).show();
+                    $('#previewWordAnalis2').hide();
+                    $('#previewPdfAnalis2').hide();
                 } else {
                     $('#previewWordAnalis2').attr('src', fileUrl).show();
                     $('#previewPdfAnalis2').hide();
+                    $('#previewImgAnalis2').hide();
                 }
             }
 
@@ -995,15 +1013,30 @@
         });
 
         function previewFileAnalis(input) {
-            var file = input.files[0];
+        var file = input.files[0];
+        var fileExtension = file.name.split('.').pop().toLowerCase();
+        var reader = new FileReader();
+
+        reader.onload = function(e) {
+            var previewPdf = document.getElementById('previewPdfAnalis');
+            var previewImage = document.getElementById('previewImgAnalis');
+
+            previewPdf.style.display = 'none';
+            previewImage.style.display = 'none';
+
             if (file.type === "application/pdf") {
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    $('#previewPdfAnalis').attr("src", e.target.result).show();
-                };
-                reader.readAsDataURL(file);
+                previewPdf.src = e.target.result;
+                previewPdf.style.display = 'block';
+            } else if (['jpg', 'jpeg', 'png', 'webp'].includes(fileExtension)) {
+                previewImage.src = e.target.result;
+                previewImage.style.display = 'block';
             }
+        };
+
+        if (file) {
+            reader.readAsDataURL(file);
         }
+    }
     </script>
 
     <script>

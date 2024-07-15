@@ -9,6 +9,7 @@
             <th class="border">Regist Number</th>
             <th class="border">Type Packing</th>
             <th class="border text-center">Type</th>
+            <th class="border text-center">Biaya</th>
             <th class="border text-center">Status</th>
             <th class="border text-center">Berkas</th>
         </tr>
@@ -28,6 +29,15 @@
                         Diantar
                     @elseif ($item->type == 2)
                         Diambil
+                    @endif
+                </td>
+                <td class="text-center text-nowrap border">
+                    @if ($item->biaya)
+                        <a href="{{ asset('storage/' . $item->biaya) }}"
+                            class="mb-0 btn btn-success" target="_blank">Biaya</a>
+                        <br>
+                    @else
+                        -
                     @endif
                 </td>
                 <td class="text-center text-nowrap border">

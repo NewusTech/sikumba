@@ -68,16 +68,15 @@
         }
     </script>
 
-<script>
-    window.onload = function() {
-        var preview = document.getElementById('preview');
-        var fotoUrl = "{{ isset($logo) ? asset('storage/' . $logo->foto) : '#' }}";
+    <script>
+        window.onload = function() {
+            var preview = document.getElementById('preview');
+            var fotoUrl = "{{ isset($logo) ? asset('storage/' . $logo->foto) : '#' }}";
 
-        if (fotoUrl !== '#') {
-            preview.src = fotoUrl;
-            preview.style.display = 'block';
+            if (fotoUrl !== '#') {
+                preview.src = fotoUrl;
+                preview.style.display = 'block';
+            }
         }
-    }
-</script>
-
+    </script>
 @endsection
