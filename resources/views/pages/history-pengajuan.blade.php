@@ -146,7 +146,6 @@
                             <label for="berkas_analis">Choose</label>
                             <input type="file" class="form-control" id="berkas_analis" name="berkas_analis"
                                 onchange="previewFileAnalis(this);">
-
                             <img id="previewImgAnalis" src="" style="max-width: 100%; display: none;">
                             <embed id="previewPdfAnalis" src="" type="application/pdf"
                                 style="width: 100%; height: 500px; display: none;">
@@ -157,6 +156,8 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary">Upload</button>
+                        <button type="button" class="btn btn-danger" id="deleteFileButton" style="display: none;"
+                            onclick="deleteFileAnalis()">Delete File</button>
                     </div>
                 </form>
             </div>
@@ -174,21 +175,16 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-
                 <div class="modal-body">
-                    <div class="form-group">
-                        <label for="berkas_analis">Berkas</label>
-                        <img id="previewImgAnalis2" src="" style="max-width: 100%; display: none;">
-                        <iframe id="previewWordAnalis2" src=""
-                            style="width: 0%; height: 0; display: none;"></iframe>
-                        <embed id="previewPdfAnalis2" src="" type="application/pdf"
-                            style="width: 100%; height: 500px; display: none;">
-                    </div>
+                    <embed id="checkPdfAnalis" src="" type="application/pdf"
+                        style="width: 100%; height: 500px; display: none;">
+                    <iframe id="checkWordAnalis" src=""
+                        style="width: 100%; height: 500px; display: none;"></iframe>
+                    <img id="checkImgAnalis" src="" style="max-width: 100%; display: none;">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
-
             </div>
         </div>
     </div>
@@ -947,28 +943,25 @@
         function openUploadModalAnalis(id, fileUrl) {
             // Reset form dan pratinjau ketika membuka modal
             $('#uploadFormAnalis').trigger('reset');
-            $('#previewPdfAnalis').hide(); // Sembunyikan pratinjau PDF terlebih dahulu
-            $('#previewWordAnalis').hide();
-            $('#previewImgAnalis').hide();
-
-            // Menentukan jenis file berdasarkan ekstensi
-            var fileExtension = fileUrl.split('.').pop().toLowerCase();
+            $('#previewPdfAnalis').hide().attr('src', ''); // Sembunyikan dan kosongkan pratinjau PDF
+            $('#previewWordAnalis').hide().attr('src', ''); // Sembunyikan dan kosongkan pratinjau Word
+            $('#previewImgAnalis').hide().attr('src', ''); // Sembunyikan dan kosongkan pratinjau gambar
 
             if (fileUrl) {
+                var fileExtension = fileUrl.split('.').pop().toLowerCase();
+
                 if (fileExtension === 'pdf') {
                     $('#previewPdfAnalis').attr('src', fileUrl).show();
-                    $('#previewWordAnalis').hide();
-                    $('#previewImgAnalis').hide();
-                } else if (fileExtension === 'jpg' || fileExtension === 'png' || fileExtension === 'jpeg' ||
-                    fileExtension === 'webp') {
+                    $('#deleteFileButton').show();
+                } else if (['jpg', 'jpeg', 'png', 'webp'].includes(fileExtension)) {
                     $('#previewImgAnalis').attr('src', fileUrl).show();
-                    $('#previewWordAnalis').hide();
-                    $('#previewPdfAnalis').hide();
+                    $('#deleteFileButton').show();
                 } else {
                     $('#previewWordAnalis').attr('src', fileUrl).show();
-                    $('#previewPdfAnalis').hide();
-                    $('#previewImgAnalis').hide();
+                    $('#deleteFileButton').show();
                 }
+            } else {
+                $('#deleteFileButton').hide();
             }
 
             $('#pengajuan_idAnalis').val(id);
@@ -1005,38 +998,61 @@
             $('#pengajuan_idAnalis').val(id);
             $('#checkModalAnalis').modal('show');
         }
-
-
+        
         $('#uploadModalAnalis').on('hidden.bs.modal', function() {
             $('#uploadFormAnalis').trigger('reset');
             $('#previewPdfAnalis').hide().attr('src', ''); // Menyembunyikan dan menghapus sumber pratinjau PDF
+            $('#previewWordAnalis').hide().attr('src', ''); // Menyembunyikan dan menghapus sumber pratinjau Word
+            $('#previewImgAnalis').hide().attr('src', ''); // Menyembunyikan dan menghapus sumber pratinjau gambar
+            $('#deleteFileButton').hide(); // Menyembunyikan tombol hapus
         });
 
         function previewFileAnalis(input) {
-        var file = input.files[0];
-        var fileExtension = file.name.split('.').pop().toLowerCase();
-        var reader = new FileReader();
+            var file = input.files[0];
+            var fileExtension = file.name.split('.').pop().toLowerCase();
+            var reader = new FileReader();
 
-        reader.onload = function(e) {
-            var previewPdf = document.getElementById('previewPdfAnalis');
-            var previewImage = document.getElementById('previewImgAnalis');
+            reader.onload = function(e) {
+                $('#previewPdfAnalis').hide().attr('src', '');
+                $('#previewImgAnalis').hide().attr('src', '');
 
-            previewPdf.style.display = 'none';
-            previewImage.style.display = 'none';
+                if (file.type === "application/pdf") {
+                    $('#previewPdfAnalis').attr('src', e.target.result).show();
+                } else if (['jpg', 'jpeg', 'png', 'webp'].includes(fileExtension)) {
+                    $('#previewImgAnalis').attr('src', e.target.result).show();
+                }
+            };
 
-            if (file.type === "application/pdf") {
-                previewPdf.src = e.target.result;
-                previewPdf.style.display = 'block';
-            } else if (['jpg', 'jpeg', 'png', 'webp'].includes(fileExtension)) {
-                previewImage.src = e.target.result;
-                previewImage.style.display = 'block';
+            if (file) {
+                reader.readAsDataURL(file);
             }
-        };
-
-        if (file) {
-            reader.readAsDataURL(file);
         }
-    }
+
+        function deleteFileAnalis() {
+            if (confirm('Are you sure you want to delete this file?')) {
+                var id = $('#pengajuan_idAnalis').val();
+                $.ajax({
+                    url: '/history-pengajuan/deleteAnalis/' + id,
+                    type: 'DELETE',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        alert('File deleted successfully');
+                        $('#uploadModalAnalis').modal('hide');
+                        // Hapus pratinjau file dari modal
+                        $('#previewPdfAnalis').hide().attr('src', '');
+                        $('#previewWordAnalis').hide().attr('src', '');
+                        $('#previewImgAnalis').hide().attr('src', '');
+                        $('#deleteFileButton').hide();
+                        // Optionally, you can refresh the page or update the UI to reflect the deletion
+                    },
+                    error: function(xhr) {
+                        alert('Error deleting file');
+                    }
+                });
+            }
+        }
     </script>
 
     <script>
@@ -1057,7 +1073,6 @@
             $('#uploadFormApprove').trigger('reset');
             $('#previewPdfApprove').hide().attr('src', ''); // Menyembunyikan dan menghapus sumber pratinjau PDF
         });
-
 
         function previewFileApprove(input) {
             var file = input.files[0];

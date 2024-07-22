@@ -154,6 +154,19 @@ class HistorypengajuanController extends Controller
         return back()->with('success', 'File updated successfully.');
     }
 
+    public function deleteAnalis($id)
+    {
+        $pengajuan = Pengajuan::find($id);
+
+        if ($pengajuan && $pengajuan->berkas_analis) {
+            Storage::delete($pengajuan->berkas_analis);
+            $pengajuan->berkas_analis = null;
+            $pengajuan->save();
+        }
+
+        return response()->json(['success' => 'File berhasil dihapus']);
+    }
+
     public function edit($id)
     {
         $userlogin = Auth::user()->id;

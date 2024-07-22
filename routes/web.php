@@ -140,6 +140,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/history-pengajuan/upload', [HistorypengajuanController::class, 'uploadPhoto'])->name('upload.photo');
     Route::post('/history-pengajuan/uploadLaporan', [HistorypengajuanController::class, 'uploadLaporan'])->name('upload.laporan');
     Route::post('/history-pengajuan/uploadAnalis', [HistorypengajuanController::class, 'uploadAnalis'])->name('uploadpengajuan.Analis');
+    Route::delete('/history-pengajuan/deleteAnalis/{id}', [HistoryPengajuanController::class, 'deleteAnalis']);
 
     Route::post('/approve/{id}', [HistorypengajuanController::class, 'approve'])->name('approve');
     Route::post('/approveBayar', [HistorypengajuanController::class, 'approveBayar'])->name('approveBayar');
