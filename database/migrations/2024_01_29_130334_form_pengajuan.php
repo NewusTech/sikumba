@@ -46,6 +46,7 @@ return new class extends Migration
             $table->date('analisdate_surat')->nullable();
             $table->string('no_laporan')->nullable();
             $table->json('detail')->nullable();
+            $table->json('detail_tambahan')->nullable();
             $table->json('detail_laporan')->nullable();
             $table->string('no_sni')->nullable();
             $table->string('grade')->nullable();

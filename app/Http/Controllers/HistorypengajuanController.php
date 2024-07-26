@@ -222,6 +222,26 @@ class HistorypengajuanController extends Controller
         $history->weight = $request->get('weight');
         $history->volume = $request->get('volume');
 
+        $detailData = $request->get('detail_tambahan');
+
+        if ($detailData) {
+            // Menginisialisasi array untuk menyimpan detail
+            $details = [];
+
+            // Melakukan iterasi untuk setiap data detail yang dikirimkan
+            foreach ($detailData as $detail) {
+                // Menambahkan data detail ke dalam array
+                $details[] = [
+                    'judul_form' => $detail['judul_form'],
+                    'isi_form' => $detail['isi_form'],
+                ];
+            }
+
+            // Mengubah array detail menjadi format JSON
+            $history->detail_tambahan = json_encode($details);
+        }
+
+
         $history->save();
 
         return redirect()->route('history-pengajuan')->with('success', 'Pengajuan updated successfully');
