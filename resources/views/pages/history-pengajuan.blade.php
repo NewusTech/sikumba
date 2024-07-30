@@ -21,14 +21,18 @@
                         <div class="form-group">
                             <label for="berkas">Choose</label>
                             <input type="file" class="form-control" id="berkas" name="berkas"
-                                onchange="previewFile(this);" accept="application/pdf">
+                                onchange="previewFile(this);">
 
+                            <img id="previewImg" src="" style="max-width: 100%; display: none;">
                             <embed id="previewPdf" src="" type="application/pdf"
                                 style="width: 100%; height: 500px; display: none;">
+                            <iframe id="previewWord" src="" style="width: 0%; height: 0; display: none;"></iframe>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-danger" id="deleteFileButton" style="display: none;"
+                        onclick="deleteFile()">Delete</button>
                         <button type="submit" class="btn btn-primary">Upload</button>
                     </div>
                 </form>
@@ -52,6 +56,9 @@
                     <div class="form-group">
                         <label for="berkas">Berkas</label>
 
+                        <img id="previewImg2" src="" style="max-width: 100%; display: none;">
+                        <iframe id="previewWord2" src=""
+                            style="width: 0%; height: 0; display: none;"></iframe>
                         <embed id="previewPdf2" src="" type="application/pdf"
                             style="width: 100%; height: 500px; display: none;">
                     </div>
@@ -83,14 +90,20 @@
                         <div class="form-group">
                             <label for="berkas_laporan">Choose</label>
                             <input type="file" class="form-control" id="berkas_laporan" name="berkas_laporan"
-                                onchange="previewFileLap(this);" accept="application/pdf">
+                                onchange="previewFileLap(this);">
 
+                            <img id="previewImgLap" src="" style="max-width: 100%; display: none;">
                             <embed id="previewPdfLap" src="" type="application/pdf"
                                 style="width: 100%; height: 500px; display: none;">
+                            <iframe id="previewWordLap" src=""
+                                style="width: 0%; height: 0; display: none;"></iframe>
+
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-danger" id="deleteFileButton" style="display: none;"
+                            onclick="deleteFileLap()">Delete</button>
                         <button type="submit" class="btn btn-primary">Upload</button>
                     </div>
                 </form>
@@ -114,6 +127,9 @@
                     <div class="form-group">
                         <label for="berkas_laporan">Berkas</label>
 
+                        <img id="previewImgLap2" src="" style="max-width: 100%; display: none;">
+                        <iframe id="previewWordLap2" src=""
+                            style="width: 0%; height: 0; display: none;"></iframe>
                         <embed id="previewPdfLap2" src="" type="application/pdf"
                             style="width: 100%; height: 500px; display: none;">
                     </div>
@@ -155,9 +171,9 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Upload</button>
                         <button type="button" class="btn btn-danger" id="deleteFileButton" style="display: none;"
-                            onclick="deleteFileAnalis()">Delete File</button>
+                            onclick="deleteFileAnalis()">Delete</button>
+                        <button type="submit" class="btn btn-primary">Upload</button>
                     </div>
                 </form>
             </div>
@@ -175,16 +191,21 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
+
                 <div class="modal-body">
-                    <embed id="checkPdfAnalis" src="" type="application/pdf"
-                        style="width: 100%; height: 500px; display: none;">
-                    <iframe id="checkWordAnalis" src=""
-                        style="width: 100%; height: 500px; display: none;"></iframe>
-                    <img id="checkImgAnalis" src="" style="max-width: 100%; display: none;">
+                    <div class="form-group">
+                        <label for="berkas_analis">Berkas</label>
+                        <img id="previewImgAnalis2" src="" style="max-width: 100%; display: none;">
+                        <iframe id="previewWordAnalis2" src=""
+                            style="width: 0%; height: 0; display: none;"></iframe>
+                        <embed id="previewPdfAnalis2" src="" type="application/pdf"
+                            style="width: 100%; height: 500px; display: none;">
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
+
             </div>
         </div>
     </div>
@@ -794,6 +815,7 @@
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
     <script>
         $(document).ready(function() {
             // Handle live search
@@ -820,59 +842,80 @@
                 fetch_data(page);
             });
 
-            // Fetch data function
-            function fetch_data(page = 1) {
-                var query = $('#search').val();
-                var commodity = $('#commodity').val();
-                var dateawal = $('#dateawal').val();
-                var dateakhir = $('#dateakhir').val();
-                var baseUrl = "{!! url('/history-pengajuan/search') !!}?query=" + query + "&commodity=" + commodity + "&dateawal=" +
-                    dateawal + "&dateakhir=" + dateakhir;
-                $.ajax({
-                    url: baseUrl,
-                    type: 'GET',
-                    data: {
-                        page: page,
-                    },
-                    success: function(data) {
-                        $('#search-list').html(data);
-                    }
-                });
-            }
         });
-    </script>
 
-    <script>
-        document.getElementById('export-button').addEventListener('click', function() {
-            var search = document.getElementById('search').value;
-            var commodity = document.getElementById('commodity').value;
-            var dateawal = document.getElementById('dateawal').value;
-            var dateakhir = document.getElementById('dateakhir').value;
-            var exportUrl = this.getAttribute('href') + '?searchh=' + search + "&commodity=" + commodity +
-                "&dateawal=" + dateawal + "&dateakhir=" + dateakhir;
-            this.setAttribute('href', exportUrl);
-        });
-    </script>
+        // Fetch data function
+        function fetch_data(page = 1) {
+            var query = $('#search').val();
+            var commodity = $('#commodity').val();
+            var dateawal = $('#dateawal').val();
+            var dateakhir = $('#dateakhir').val();
+            var baseUrl = "{!! url('/history-pengajuan/search') !!}?query=" + query + "&commodity=" + commodity + "&dateawal=" +
+                dateawal + "&dateakhir=" + dateakhir;
+            $.ajax({
+                url: baseUrl,
+                type: 'GET',
+                data: {
+                    page: page,
+                },
+                success: function(data) {
+                    $('#search-list').html(data);
+                }
+            });
+        }
 
-    <script>
-        function openUploadModal(id, pdfUrl) {
+        function openUploadModal(id, fileUrl) {
             // Reset form dan pratinjau ketika membuka modal
             $('#uploadForm').trigger('reset');
             $('#previewPdf').hide(); // Sembunyikan pratinjau PDF terlebih dahulu
+            $('#previewWord').hide().attr('src', ''); // Sembunyikan dan kosongkan pratinjau Word
+            $('#previewImg').hide().attr('src', ''); // Sembunyikan dan kosongkan pratinjau gambar
 
-            if (pdfUrl) {
-                $('#previewPdf').attr('src', pdfUrl).show(); // Tampilkan pratinjau PDF jika URL ada
+            if (fileUrl) {
+                var fileExtension = fileUrl.split('.').pop().toLowerCase();
+
+                if (fileExtension === 'pdf') {
+                    $('#previewPdf').attr('src', fileUrl).show();
+                    $('#deleteFileButton').show();
+                } else if (['jpg', 'jpeg', 'png', 'webp'].includes(fileExtension)) {
+                    $('#previewImg').attr('src', fileUrl).show();
+                    $('#deleteFileButton').show();
+                } else {
+                    $('#previewWord').attr('src', fileUrl).show();
+                    $('#deleteFileButton').show();
+                }
+            } else {
+                $('#deleteFileButton').hide();
             }
 
             $('#pengajuan_id').val(id);
             $('#uploadModal').modal('show');
         }
 
-        function openCheckModal(id, pdfUrl) {
+        function openCheckModal(id, fileUrl) {
             $('#uploadForm').trigger('reset');
             $('#previewPdf2').hide();
-            if (pdfUrl) {
-                $('#previewPdf2').attr('src', pdfUrl).show();
+            $('#previewWord2').hide();
+            $('#previewImg2').hide();
+
+            // Menentukan jenis file berdasarkan ekstensi
+            var fileExtension = fileUrl.split('.').pop().toLowerCase();
+
+            if (fileUrl) {
+                if (fileExtension === 'pdf') {
+                    $('#previewPdf2').attr('src', fileUrl).show();
+                    $('#previewWord2').hide();
+                    $('#previewImg2').hide();
+                } else if (fileExtension === 'jpg' || fileExtension === 'png' || fileExtension === 'jpeg' ||
+                    fileExtension === 'webp') {
+                    $('#previewImg2').attr('src', fileUrl).show();
+                    $('#previewWord2').hide();
+                    $('#previewPdf2').hide();
+                } else {
+                    $('#previewWord2').attr('src', fileUrl).show();
+                    $('#previewPdf2').hide();
+                    $('#previewImg2').hide();
+                }
             }
 
             $('#pengajuan_id').val(id);
@@ -881,41 +924,113 @@
 
         $('#uploadModal').on('hidden.bs.modal', function() {
             $('#uploadForm').trigger('reset');
-            $('#previewPdf').hide().attr('src', ''); // Menyembunyikan dan menghapus sumber pratinjau PDF
+            $('#previewPdf').hide().attr('src', '');
+            $('#previewWord').hide().attr('src', ''); // Menyembunyikan dan menghapus sumber pratinjau Word
+            $('#previewImg').hide().attr('src', ''); // Menyembunyikan dan menghapus sumber pratinjau gambar
+            $('#deleteFileButton').hide(); // Menyembunyikan tombol hapus
         });
 
         function previewFile(input) {
             var file = input.files[0];
-            if (file.type === "application/pdf") {
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    $('#previewPdf').attr("src", e.target.result).show();
-                };
+            var fileExtension = file.name.split('.').pop().toLowerCase();
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                $('#previewPdf').hide().attr('src', '');
+                $('#previewImg').hide().attr('src', '');
+
+                if (file.type === "application/pdf") {
+                    $('#previewPdf').attr('src', e.target.result).show();
+                } else if (['jpg', 'jpeg', 'png', 'webp'].includes(fileExtension)) {
+                    $('#previewImg').attr('src', e.target.result).show();
+                }
+            };
+
+            if (file) {
                 reader.readAsDataURL(file);
             }
         }
-    </script>
 
-    <script>
-        function openUploadModalLap(id, pdfUrl) {
+        function deleteFile() {
+            if (confirm('Are you sure you want to delete this file?')) {
+                var id = $('#pengajuan_id').val();
+                $.ajax({
+                    url: '/history-pengajuan/delete/' + id,
+                    type: 'DELETE',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        alert('File deleted successfully');
+                        // $('#uploadModal').modal('hide');
+                        // Hapus pratinjau file dari modal
+                        $('#previewPdf').hide().attr('src', '');
+                        $('#previewWord').hide().attr('src', '');
+                        $('#previewImg').hide().attr('src', '');
+                        $('#deleteFileButton').hide();
+
+                        fetch_data();
+                        // Optionally, you can refresh the page or update the UI to reflect the deletion
+                    },
+                    error: function(xhr) {
+                        alert('Error deleting file');
+                    }
+                });
+            }
+        }
+
+        function openUploadModalLap(id, fileUrl) {
             // Reset form dan pratinjau ketika membuka modal
             $('#uploadFormLap').trigger('reset');
             $('#previewPdfLap').hide(); // Sembunyikan pratinjau PDF terlebih dahulu
+            $('#previewWordLap').hide().attr('src', ''); // Sembunyikan dan kosongkan pratinjau Word
+            $('#previewImgLap').hide().attr('src', ''); // Sembunyikan dan kosongkan pratinjau gambar
 
-            if (pdfUrl) {
-                $('#previewPdfLap').attr('src', pdfUrl).show(); // Tampilkan pratinjau PDF jika URL ada
+            if (fileUrl) {
+                var fileExtension = fileUrl.split('.').pop().toLowerCase();
+
+                if (fileExtension === 'pdf') {
+                    $('#previewPdfLap').attr('src', fileUrl).show();
+                    $('#deleteFileButton').show();
+                } else if (['jpg', 'jpeg', 'png', 'webp'].includes(fileExtension)) {
+                    $('#previewImgLap').attr('src', fileUrl).show();
+                    $('#deleteFileButton').show();
+                } else {
+                    $('#previewWordLap').attr('src', fileUrl).show();
+                    $('#deleteFileButton').show();
+                }
+            } else {
+                $('#deleteFileButton').hide();
             }
 
             $('#pengajuan_idLap').val(id);
             $('#uploadModalLap').modal('show');
         }
 
-        function openCheckModalLap(id, pdfUrl) {
-            console.log(pdfUrl)
+        function openCheckModalLap(id, fileUrl) {
             $('#uploadFormLap').trigger('reset');
             $('#previewPdfLap2').hide();
-            if (pdfUrl) {
-                $('#previewPdfLap2').attr('src', pdfUrl).show();
+            $('#previewWordLap2').hide();
+            $('#previewImgLap2').hide();
+
+            // Menentukan jenis file berdasarkan ekstensi
+            var fileExtension = fileUrl.split('.').pop().toLowerCase();
+
+            if (fileUrl) {
+                if (fileExtension === 'pdf') {
+                    $('#previewPdfLap2').attr('src', fileUrl).show();
+                    $('#previewWordLap2').hide();
+                    $('#previewImgLap2').hide();
+                } else if (fileExtension === 'jpg' || fileExtension === 'png' || fileExtension === 'jpeg' ||
+                    fileExtension === 'webp') {
+                    $('#previewImgLap2').attr('src', fileUrl).show();
+                    $('#previewWordLap2').hide();
+                    $('#previewPdfLap2').hide();
+                } else {
+                    $('#previewWordLap2').attr('src', fileUrl).show();
+                    $('#previewPdfLap2').hide();
+                    $('#previewImgLap2').hide();
+                }
             }
 
             $('#pengajuan_idLap').val(id);
@@ -924,22 +1039,61 @@
 
         $('#uploadModalLap').on('hidden.bs.modal', function() {
             $('#uploadFormLap').trigger('reset');
-            $('#previewPdfLap').hide().attr('src', ''); // Menyembunyikan dan menghapus sumber pratinjau PDF
+            $('#previewPdfLap').hide().attr('src', '');
+            $('#previewWordLap').hide().attr('src', ''); // Menyembunyikan dan menghapus sumber pratinjau Word
+            $('#previewImgLap').hide().attr('src', ''); // Menyembunyikan dan menghapus sumber pratinjau gambar
+            $('#deleteFileButton').hide(); // Menyembunyikan tombol hapus
         });
 
         function previewFileLap(input) {
             var file = input.files[0];
-            if (file.type === "application/pdf") {
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    $('#previewPdfLap').attr("src", e.target.result).show();
-                };
+            var fileExtension = file.name.split('.').pop().toLowerCase();
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                $('#previewPdfLap').hide().attr('src', '');
+                $('#previewImgLap').hide().attr('src', '');
+
+                if (file.type === "application/pdf") {
+                    $('#previewPdfLap').attr('src', e.target.result).show();
+                } else if (['jpg', 'jpeg', 'png', 'webp'].includes(fileExtension)) {
+                    $('#previewImgLap').attr('src', e.target.result).show();
+                }
+            };
+
+            if (file) {
                 reader.readAsDataURL(file);
             }
         }
-    </script>
 
-    <script>
+        function deleteFileLap() {
+            if (confirm('Are you sure you want to delete this file?')) {
+                var id = $('#pengajuan_idLap').val();
+                $.ajax({
+                    url: '/history-pengajuan/deleteLaporan/' + id,
+                    type: 'DELETE',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        alert('File deleted successfully');
+                        // $('#uploadModalLap').modal('hide');
+                        // Hapus pratinjau file dari modal
+                        $('#previewPdfLap').hide().attr('src', '');
+                        $('#previewWordLap').hide().attr('src', '');
+                        $('#previewImgLap').hide().attr('src', '');
+                        $('#deleteFileButton').hide();
+
+                        fetch_data();
+                        // Optionally, you can refresh the page or update the UI to reflect the deletion
+                    },
+                    error: function(xhr) {
+                        alert('Error deleting file');
+                    }
+                });
+            }
+        }
+
         function openUploadModalAnalis(id, fileUrl) {
             // Reset form dan pratinjau ketika membuka modal
             $('#uploadFormAnalis').trigger('reset');
@@ -974,7 +1128,6 @@
             $('#previewWordAnalis2').hide();
             $('#previewImgAnalis2').hide();
 
-
             // Menentukan jenis file berdasarkan ekstensi
             var fileExtension = fileUrl.split('.').pop().toLowerCase();
 
@@ -998,7 +1151,7 @@
             $('#pengajuan_idAnalis').val(id);
             $('#checkModalAnalis').modal('show');
         }
-        
+
         $('#uploadModalAnalis').on('hidden.bs.modal', function() {
             $('#uploadFormAnalis').trigger('reset');
             $('#previewPdfAnalis').hide().attr('src', ''); // Menyembunyikan dan menghapus sumber pratinjau PDF
@@ -1039,12 +1192,14 @@
                     },
                     success: function(response) {
                         alert('File deleted successfully');
-                        $('#uploadModalAnalis').modal('hide');
+                        // $('#uploadModalAnalis').modal('hide');
                         // Hapus pratinjau file dari modal
                         $('#previewPdfAnalis').hide().attr('src', '');
                         $('#previewWordAnalis').hide().attr('src', '');
                         $('#previewImgAnalis').hide().attr('src', '');
                         $('#deleteFileButton').hide();
+
+                        fetch_data();
                         // Optionally, you can refresh the page or update the UI to reflect the deletion
                     },
                     error: function(xhr) {
@@ -1053,6 +1208,18 @@
                 });
             }
         }
+    </script>
+
+    <script>
+        document.getElementById('export-button').addEventListener('click', function() {
+            var search = document.getElementById('search').value;
+            var commodity = document.getElementById('commodity').value;
+            var dateawal = document.getElementById('dateawal').value;
+            var dateakhir = document.getElementById('dateakhir').value;
+            var exportUrl = this.getAttribute('href') + '?searchh=' + search + "&commodity=" + commodity +
+                "&dateawal=" + dateawal + "&dateakhir=" + dateakhir;
+            this.setAttribute('href', exportUrl);
+        });
     </script>
 
     <script>

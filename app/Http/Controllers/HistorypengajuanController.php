@@ -92,7 +92,7 @@ class HistorypengajuanController extends Controller
     public function uploadPhoto(Request $request)
     {
         $request->validate([
-            'berkas' => 'required|file|mimes:pdf|max:10000', // 2MB Max
+            'berkas' => 'required|file|max:10000', // 2MB Max
         ]);
 
         $pengajuan = Pengajuan::find($request->pengajuan_id);
@@ -110,10 +110,23 @@ class HistorypengajuanController extends Controller
         return back()->with('success', 'File updated successfully.');
     }
 
+    public function delete($id)
+    {
+        $pengajuan = Pengajuan::find($id);
+
+        if ($pengajuan && $pengajuan->berkas) {
+            Storage::delete($pengajuan->berkas);
+            $pengajuan->berkas = null;
+            $pengajuan->save();
+        }
+
+        return response()->json(['success' => 'File berhasil dihapus']);
+    }
+
     public function uploadLaporan(Request $request)
     {
         $request->validate([
-            'berkas_laporan' => 'required|file|mimes:pdf|max:10000', // 2MB Max
+            'berkas_laporan' => 'required|file|max:10000', // 2MB Max
         ]);
 
         // info($request->hasFile('berkas_laporan'));
@@ -131,6 +144,19 @@ class HistorypengajuanController extends Controller
         }
 
         return back()->with('success', 'File updated successfully.');
+    }
+
+    public function deleteLaporan($id)
+    {
+        $pengajuan = Pengajuan::find($id);
+
+        if ($pengajuan && $pengajuan->berkas_laporan) {
+            Storage::delete($pengajuan->berkas_laporan);
+            $pengajuan->berkas_laporan = null;
+            $pengajuan->save();
+        }
+
+        return response()->json(['success' => 'File berhasil dihapus']);
     }
 
     public function uploadAnalis(Request $request)
