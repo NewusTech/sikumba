@@ -116,6 +116,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/kontak', [KontakController::class, 'createOrUpdate'])->name('kontak.create');
     Route::post('/kontak/update', [KontakController::class, 'update'])->name('kontak.update');
 
+    Route::get('/profile-user', [UserController::class, 'profileuser'])->name('profile-user');
+    Route::put('/profile-user/{id}', [UserController::class, 'profileupdate'])->name('profile-user.update');
+
     Route::get('/review-user', [SurveyController::class, 'indexhome'])->name('review-user');
     Route::get('/review-user-search', [SurveyController::class, 'indexsearch'])->name('review-user-search');
 

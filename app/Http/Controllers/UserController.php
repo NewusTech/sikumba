@@ -81,6 +81,45 @@ class UserController extends Controller
         );
     }
 
+    public function profileuser()
+    {
+        $userr = Auth::user();
+        $roles = Role::all();
+
+        return view(
+            'pages.profile-user',
+            [
+                'userr' => $userr,
+                'user' => Auth::user(),
+                'roles' => $roles
+            ]
+        );
+    }
+
+    public function profileupdate(Request $request, $id)
+    {
+        try {
+            DB::beginTransaction();
+
+            $user = User::findOrFail($id);
+            
+            $passwordfix = bcrypt($request->input('password'));
+
+            $user->update([
+                'fullname' => $request->input('fullname'),
+                'email' => $request->input('email'),
+                'password' => $passwordfix,
+            ]);
+
+            DB::commit();
+
+            return redirect()->route('profile-user')->with('success', 'Profile user has been updated');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
     public function update(Request $request, $id)
     {
         try {
