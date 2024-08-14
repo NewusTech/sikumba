@@ -21,7 +21,7 @@
                         <div class="form-group">
                             <label for="berkas">Choose</label>
                             <input type="file" class="form-control" id="berkas" name="berkas"
-                                onchange="previewFile(this);">
+                                onchange="previewFile(this);" accept=".pdf, .doc, .docx, .xls, .xlsx, .jpg, .jpeg, .png">
 
                             <img id="previewImg" src="" style="max-width: 100%; display: none;">
                             <embed id="previewPdf" src="" type="application/pdf"
@@ -32,7 +32,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-danger" id="deleteFileButton" style="display: none;"
-                        onclick="deleteFile()">Delete</button>
+                            onclick="deleteFile()">Delete</button>
                         <button type="submit" class="btn btn-primary">Upload</button>
                     </div>
                 </form>
@@ -57,8 +57,7 @@
                         <label for="berkas">Berkas</label>
 
                         <img id="previewImg2" src="" style="max-width: 100%; display: none;">
-                        <iframe id="previewWord2" src=""
-                            style="width: 0%; height: 0; display: none;"></iframe>
+                        <iframe id="previewWord2" src="" style="width: 0%; height: 0; display: none;"></iframe>
                         <embed id="previewPdf2" src="" type="application/pdf"
                             style="width: 100%; height: 500px; display: none;">
                     </div>
@@ -90,6 +89,7 @@
                         <div class="form-group">
                             <label for="berkas_laporan">Choose</label>
                             <input type="file" class="form-control" id="berkas_laporan" name="berkas_laporan"
+                                accept=".pdf, .doc, .docx, .xls, .xlsx, .jpg, .jpeg, .png"
                                 onchange="previewFileLap(this);">
 
                             <img id="previewImgLap" src="" style="max-width: 100%; display: none;">
@@ -161,7 +161,8 @@
                         <div class="form-group">
                             <label for="berkas_analis">Choose</label>
                             <input type="file" class="form-control" id="berkas_analis" name="berkas_analis"
-                                onchange="previewFileAnalis(this);">
+                                onchange="previewFileAnalis(this);"
+                                accept=".pdf, .doc, .docx, .xls, .xlsx, .jpg, .jpeg, .png">
                             <img id="previewImgAnalis" src="" style="max-width: 100%; display: none;">
                             <embed id="previewPdfAnalis" src="" type="application/pdf"
                                 style="width: 100%; height: 500px; display: none;">
@@ -817,6 +818,51 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
+        document.getElementById('berkas').addEventListener('change', function() {
+            const file = this.files[0];
+            const maxSize = 2 * 1024 * 1024; // 2 MB dalam bytes
+
+            if (file && file.size > maxSize) {
+                alert('Ukuran maksimal file adalah 2 MB');
+                this.value = ''; // Reset input file
+                return
+            }
+        });
+
+        document.getElementById('berkas_analis').addEventListener('change', function() {
+            const file = this.files[0];
+            const maxSize = 2 * 1024 * 1024; // 2 MB dalam bytes
+
+            if (file && file.size > maxSize) {
+                alert('Ukuran maksimal file adalah 2 MB');
+                this.value = ''; // Reset input file
+                return
+            }
+
+            
+        });
+
+        document.getElementById('berkas_laporan').addEventListener('change', function() {
+            const file = this.files[0];
+            const maxSize = 2 * 1024 * 1024; // 2 MB dalam bytes
+
+            if (file && file.size > maxSize) {
+                alert('Ukuran maksimal file adalah 2 MB');
+                this.value = ''; // Reset input file
+                return
+            }
+        });
+
+        document.getElementById('berkas').addEventListener('change', function() {
+            const file = this.files[0];
+            const maxSize = 2 * 1024 * 1024; // 2 MB dalam bytes
+
+            if (file && file.size > maxSize) {
+                alert('Ukuran maksimal file adalah 2 MB');
+                this.value = ''; // Reset input file
+            }
+        });
+
         $(document).ready(function() {
             // Handle live search
             $('#search').on('keyup', function() {

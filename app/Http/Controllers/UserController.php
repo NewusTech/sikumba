@@ -99,26 +99,61 @@ class UserController extends Controller
     public function profileupdate(Request $request, $id)
     {
         try {
+            // Mulai transaksi database
             DB::beginTransaction();
-
+    
+            // Temukan user berdasarkan ID
             $user = User::findOrFail($id);
-            
-            $passwordfix = bcrypt($request->input('password'));
-
-            $user->update([
-                'fullname' => $request->input('fullname'),
-                'email' => $request->input('email'),
-                'password' => $passwordfix,
+    
+            // Validasi input
+            $validatedData = $request->validate([
+                'fullname' => 'required|max:255|min:2',
+                'email' => [
+                    'required',
+                    'email',
+                    'max:255',
+    
+                    function ($attribute, $value, $fail) {
+                        $domain = explode('@', $value)[1] ?? '';
+                        if (!preg_match('/.+\..+/', $domain)) {
+                            $fail('The ' . $attribute . ' must contain a valid domain.');
+                        }
+                    },
+                ],
+                'password' => 'nullable|min:5|max:255',
             ]);
-
+    
+            // Hash password jika diberikan
+            if ($request->filled('password')) {
+                $validatedData['password'] = bcrypt($request->input('password'));
+            } else {
+                // Jika password tidak diisi, hapus dari array yang akan diupdate
+                unset($validatedData['password']);
+            }
+    
+            // Update data user
+            $user->update($validatedData);
+    
+            // Commit transaksi
             DB::commit();
-
+    
+            // Redirect dengan pesan sukses
             return redirect()->route('profile-user')->with('success', 'Profile user has been updated');
-        } catch (\Exception $e) {
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Rollback transaksi jika terjadi kesalahan
             DB::rollBack();
-            return response()->json(['error' => $e->getMessage()], 500);
+    
+            // Redirect kembali dengan pesan kesalahan validasi
+            return redirect()->back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            // Rollback transaksi jika terjadi kesalahan
+            DB::rollBack();
+    
+            // Redirect kembali dengan pesan kesalahan umum
+            return redirect()->back()->with('error', 'Something went wrong, please try again later.');
         }
     }
+     
 
     public function update(Request $request, $id)
     {

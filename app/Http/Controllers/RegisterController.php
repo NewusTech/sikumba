@@ -15,9 +15,20 @@ class RegisterController extends Controller
 
     public function store()
     {
+
         $attributes = request()->validate([
             'fullname' => 'required|max:255|min:2',
-            'email' => 'required|email|max:255|unique:users,email',
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                'unique:users,email',
+                function ($attribute, $value, $fail) {
+                    if (!preg_match('/.+\..+/', explode('@', $value)[1])) {
+                        $fail('The '.$attribute.' must contain a valid domain.');
+                    }
+                },
+            ],
             'password' => 'required|min:5|max:255',
         ]);
 

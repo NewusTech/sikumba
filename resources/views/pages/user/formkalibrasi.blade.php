@@ -24,12 +24,13 @@
                             <small>Upload Surat Permohonan</small>
                             <div class="form-group">
                                 <label for="file" class="custom-file-label">Pilih Berkas (PDF / Foto)</label>
-                                <input type="file" class="form-control" id="file" name="file">
+                                <input type="file" class="form-control" id="file" name="file" accept=".pdf, .jpg, .jpeg, .png">
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="example-text-input" class="form-control-label">Name <small class="text-danger">*</small></label>
+                                        <label for="example-text-input" class="form-control-label">Name <small
+                                                class="text-danger">*</small></label>
                                         <input class="form-control" type="text" name="name"
                                             value="{{ auth()->check() ? auth()->user()->name : '' }}">
                                         @error('name')
@@ -39,9 +40,11 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="example-text-input" class="form-control-label">Date <small class="text-danger">*</small></label>
+                                        <label for="example-text-input" class="form-control-label">Application date <small
+                                                class="text-danger">*</small></label>
                                         <input class="form-control" type="date" name="date"
-                                            value="{{ auth()->user()->date ? auth()->user()->date->format('Y-m-d') : '' }}">
+                                            value="{{ auth()->user()->date ? auth()->user()->date->format('Y-m-d') : '' }}"
+                                            min="{{ \Carbon\Carbon::today()->format('Y-m-d') }}">
                                         @error('date')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
@@ -122,5 +125,15 @@
         setTimeout(function() {
             document.getElementById('successAlert').style.display = 'none';
         }, 3000);
+
+        document.getElementById('file').addEventListener('change', function() {
+            const file = this.files[0];
+            const maxSize = 2 * 1024 * 1024; // 2 MB dalam bytes
+
+            if (file && file.size > maxSize) {
+                alert('Ukuran maksimal file adalah 2 MB');
+                this.value = ''; // Reset input file
+            }
+        });
     </script>
 @endsection

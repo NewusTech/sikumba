@@ -21,10 +21,12 @@
                                     <label for="keterangan" class="form-label">Biaya Layanan</label>
                                     <input type="file" class="form-control" id="file" name="file"
                                         onchange="previewFile(this)">
-                                        <div id="preview-container" style="display: none;">
-                                            <img id="preview-image" src="#" alt="Preview" style="max-width: 200px; max-height: 200px; display: none;">
-                                            <embed id="preview-pdf" src="#" type="application/pdf" width="60%" height="600" style="display: none;">
-                                        </div>
+                                    <div id="preview-container" style="display: none;">
+                                        <img id="preview-image" src="#" alt="Preview"
+                                            style="max-width: 200px; max-height: 200px; display: none;">
+                                        <embed id="preview-pdf" src="#" type="application/pdf" width="60%"
+                                            height="600" style="display: none;">
+                                    </div>
 
                                     @error('biaya')
                                         <span class="text-danger">{{ $message }}</span>
@@ -55,10 +57,11 @@
                             </div>
 
                             <div class="col-md-6">
-                                <label for="keterangan" class="form-label">Date</label>
+                                <label for="keterangan" class="form-label">Application Date</label>
                                 <input type="date" class="form-control" id="date" name="date"
-                                    value="{{ $history->date }}">
+                                    value="{{ $history->date }}" min="{{ \Carbon\Carbon::today()->format('Y-m-d') }}">
                             </div>
+
                             <div class="col-md-6">
                                 <label for="keterangan" class="form-label">Sealing Mark</label>
                                 <input type="text" class="form-control" id="sealing_mark" name="sealing_mark"
@@ -119,60 +122,60 @@
                             </div>
                         </div>
 
-                            {{-- Form input array --}}
-                            <div class="col-md-12 mt-3">
-                                <label for="detail_tambahan" class="form-label">Detail Tambahan</label>
-                                <div class="row">
-                                    <div class="col-md-5 text-center">
-                                        Judul
-                                    </div>
-                                    <div class="col-md-5 text-center">
-                                        Isi
-                                    </div>
-                                    <div class="col-md-2">
-                                    </div>
+                        {{-- Form input array --}}
+                        <div class="col-md-12 mt-3">
+                            <label for="detail_tambahan" class="form-label">Detail Tambahan</label>
+                            <div class="row">
+                                <div class="col-md-5 text-center">
+                                    Judul
                                 </div>
-                                <div id="detail_inputs">
-                                    @if ($history->detail_tambahan)
-                                        @foreach (json_decode($history->detail_tambahan) as $index => $detail_tambahan)
-                                            <div class="row">
-                                                <div class="col-md-5">
-                                                    <input type="text" class="form-control"
-                                                        name="detail_tambahan[{{ $index }}][judul_form]"
-                                                        value="{{ $detail_tambahan->judul_form }}" placeholder="Judul">
-                                                </div>
-                                                <div class="col-md-5">
-                                                    <input type="text" class="form-control"
-                                                        name="detail_tambahan[{{ $index }}][isi_form]"
-                                                        value="{{ $detail_tambahan->isi_form }}" placeholder="Isi">
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <button type="button" class="btn btn-danger"
-                                                        onclick="removeDetailInput(this)">Remove</button>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    @else
+                                <div class="col-md-5 text-center">
+                                    Isi
+                                </div>
+                                <div class="col-md-2">
+                                </div>
+                            </div>
+                            <div id="detail_inputs">
+                                @if ($history->detail_tambahan)
+                                    @foreach (json_decode($history->detail_tambahan) as $index => $detail_tambahan)
                                         <div class="row">
                                             <div class="col-md-5">
-                                                <input type="text" class="form-control" name="detail_tambahan[0][judul_form]"
-                                                    placeholder="Judul">
+                                                <input type="text" class="form-control"
+                                                    name="detail_tambahan[{{ $index }}][judul_form]"
+                                                    value="{{ $detail_tambahan->judul_form }}" placeholder="Judul">
                                             </div>
                                             <div class="col-md-5">
-                                                <input type="text" class="form-control" name="detail_tambahan[0][isi_form]"
-                                                    placeholder="Isi">
+                                                <input type="text" class="form-control"
+                                                    name="detail_tambahan[{{ $index }}][isi_form]"
+                                                    value="{{ $detail_tambahan->isi_form }}" placeholder="Isi">
                                             </div>
                                             <div class="col-md-2">
                                                 <button type="button" class="btn btn-danger"
                                                     onclick="removeDetailInput(this)">Remove</button>
                                             </div>
                                         </div>
-                                    @endif
-                                </div>
-                                <button type="button" class="btn btn-success mt-2" onclick="addDetailInput()">Add
-                                    Form</button>
+                                    @endforeach
+                                @else
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <input type="text" class="form-control"
+                                                name="detail_tambahan[0][judul_form]" placeholder="Judul">
+                                        </div>
+                                        <div class="col-md-5">
+                                            <input type="text" class="form-control"
+                                                name="detail_tambahan[0][isi_form]" placeholder="Isi">
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button type="button" class="btn btn-danger"
+                                                onclick="removeDetailInput(this)">Remove</button>
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
-                            {{-- End Form input array --}}
+                            <button type="button" class="btn btn-success mt-2" onclick="addDetailInput()">Add
+                                Form</button>
+                        </div>
+                        {{-- End Form input array --}}
 
 
                         <button type="submit" class="btn btn-primary mt-4">Save Changes</button>
@@ -232,8 +235,8 @@
             }
         }
 
-         // Function to add detail_tambahan input field
-         function addDetailInput() {
+        // Function to add detail_tambahan input field
+        function addDetailInput() {
             let index = document.querySelectorAll('#detail_inputs .row').length;
             let detailInput = `
             <div class="row">

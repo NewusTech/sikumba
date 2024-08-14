@@ -36,9 +36,9 @@
                             </div>
 
                             <div class="col-md-6">
-                                <label for="keterangan" class="form-label">Date</label>
+                                <label for="keterangan" class="form-label">Application Date</label>
                                 <input type="date" class="form-control" id="date" name="date"
-                                    value="{{ $history->date }}" required>
+                                    value="{{ $history->date }}" required min="{{ \Carbon\Carbon::today()->format('Y-m-d') }}">
                             </div>
                             <div class="col-md-12">
                                 <label for="keterangan" class="form-label">Addres</label>
