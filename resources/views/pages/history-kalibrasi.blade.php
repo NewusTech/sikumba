@@ -83,8 +83,9 @@
                         <div class="form-group">
                             <label for="berkas_laporan">Choose</label>
                             <input type="file" class="form-control" id="berkas_laporan" name="berkas_laporan"
-                                onchange="previewFileLap(this);" accept="application/pdf">
+                                onchange="previewFileLap(this);" accept=".pdf, .jpg, .jpeg, .png">
 
+                            <img id="previewImgLap" src="" style="max-width: 100%; display: none;">
                             <embed id="previewPdfLap" src="" type="application/pdf"
                                 style="width: 100%; height: 500px; display: none;">
                         </div>
@@ -114,6 +115,7 @@
                     <div class="form-group">
                         <label for="berkas_laporan">Berkas</label>
 
+                        <img id="previewImgLap2" src="" style="max-width: 100%; display: none;">
                         <embed id="previewPdfLap2" src="" type="application/pdf"
                             style="width: 100%; height: 500px; display: none;">
                     </div>
@@ -144,14 +146,17 @@
                         <input type="hidden" name="kalibrasi_idAnalis" id="kalibrasi_idAnalis">
                         <div class="form-group">
                             <label for="berkas_analis">Choose</label>
+                            <small style="font-size: small">(PDF / Foto / Excel / Word)</small>
                             <input type="file" class="form-control" id="berkas_analis" name="berkas_analis"
                                 onchange="previewFileAnalis(this);"
-                                accept="application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+                                accept=".pdf, .doc, .docx, .xls, .xlsx, .jpg, .jpeg, .png">
 
+                            <img id="previewImgAnalis" src="" style="max-width: 100%; display: none;">
                             <embed id="previewPdfAnalis" src="" type="application/pdf"
                                 style="width: 100%; height: 500px; display: none;">
-                            <iframe id="previewWordAnalis" src=""
-                                style="width: 0%; height: 0; display: none;"></iframe>
+                            <a id="previewWordLinkAnalis" href="#"
+                                style="display: none; color: rgb(0, 140, 255); font-size: 13px" download>Download Word
+                                File</a>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -178,10 +183,11 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="berkas_analis">Berkas</label>
-                        <iframe id="previewWordAnalis2" src=""
-                            style="width: 0%; height: 0; display: none;"></iframe>
+                        <img id="previewImgAnalis2" src="" style="max-width: 100%; display: none;">
                         <embed id="previewPdfAnalis2" src="" type="application/pdf"
                             style="width: 100%; height: 500px; display: none;">
+                        <a id="previewWordLinkAnalis2" href="#"
+                            style="display: none; color: rgb(0, 140, 255); font-size: 13px" download>Download Word File</a>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -213,7 +219,7 @@
                             <embed id="previewPdfApprove" src="" type="application/pdf"
                                 style="width: 100%; height: 500px; display: none;">
                             <div id="imagePreviewApprove" style="display: none;">
-                                <img id="previewImage" src="">
+                                <img id="previewImage" src="" style="max-width: 100%; display: none;">
                             </div>
                         </div>
                     </div>
@@ -329,15 +335,11 @@
                                                                 class="btn btn-secondary mb-0">Approval by UPTD??</button>
                                                         @endif --}}
                                                 @elseif ($item->status == 8 && $item->admin_confirm == 0)
-                                                    @if ($item->user_confirm == 0)
-                                                        <span class="text-success">Menunggu <br> Pembayaran</span>
-                                                    @elseif ($item->user_confirm == 1)
-                                                        <button
-                                                            onclick="openUploadModalApprove({{ $item->id }}, '{{ $item->bukti_pembayaran_kalibrasi ? asset('storage/' . $item->bukti_pembayaran_kalibrasi) : '' }}')"
-                                                            class="btn btn-primary mb-0">Sudah
-                                                            membayar... <br> Selesaikan ?</button>
-                                                    @endif
-                                                @elseif ($item->status == 8 && $item->user_confirm == 1 && $item->admin_confirm == 1)
+                                                    <button
+                                                        onclick="openUploadModalApprove({{ $item->id }}, '{{ $item->bukti_pembayaran_kalibrasi ? asset('storage/' . $item->bukti_pembayaran_kalibrasi) : '' }}')"
+                                                        class="btn btn-primary mb-0">Sudah
+                                                        membayar... <br> Selesaikan ?</button>
+                                                @elseif ($item->status == 8 && $item->admin_confirm == 1)
                                                     <span class="text-success">Proses Selesai</span>
                                                 @endif
                                             @endif
@@ -456,11 +458,6 @@
                                                                 onclick="openUploadModalLap({{ $item->id }}, '{{ $item->berkas_laporan ? asset('storage/' . $item->berkas_laporan) : '' }}')"
                                                                 class="btn btn-primary btn-sm mt-1 px-2">Upload
                                                                 Laporan</button>
-                                                            {{-- @elseif ($item->status > 5)
-                                                        <button
-                                                            onclick="openCheckModalLap({{ $item->id }}, '{{ $item->berkas_laporan ? asset('storage/' . $item->berkas_laporan) : '' }}')"
-                                                            class="btn btn-primary btn-sm m-0 px-2">Lihat
-                                                            Laporan</button> --}}
                                                         @else
                                                             -
                                                         @endif
@@ -632,39 +629,68 @@
             // Reset form dan pratinjau ketika membuka modal
             $('#uploadFormLap').trigger('reset');
             $('#previewPdfLap').hide(); // Sembunyikan pratinjau PDF terlebih dahulu
+            $('#previewImgLap').hide().attr('src', '');
 
             if (pdfUrl) {
-                $('#previewPdfLap').attr('src', pdfUrl).show(); // Tampilkan pratinjau PDF jika URL ada
+                var fileExtension = pdfUrl.split('.').pop().toLowerCase();
+
+                if (fileExtension === 'pdf') {
+                    $('#previewPdfLap').attr('src', pdfUrl).show();
+                } else if (['jpg', 'jpeg', 'png', 'webp'].includes(fileExtension)) {
+                    $('#previewImgLap').attr('src', pdfUrl).show();
+                }
             }
 
             $('#kalibrasi_idLap').val(id);
             $('#uploadModalLap').modal('show');
         }
 
-        function openCheckModalLap(id, pdfUrl) {
-            console.log(pdfUrl)
+        function openCheckModalLap(id, fileUrl) {
             $('#uploadFormLap').trigger('reset');
-            $('#previewPdfLap2').hide();
-            if (pdfUrl) {
-                $('#previewPdfLap2').attr('src', pdfUrl).show();
+            $('#previewPdfLap2').hide()
+            $('#previewImgLap2').hide();
+
+            // Menentukan jenis file berdasarkan ekstensi
+            var fileExtension = fileUrl.split('.').pop().toLowerCase();
+
+            if (fileUrl) {
+                if (fileExtension === 'pdf') {
+                    $('#previewPdfLap2').attr('src', fileUrl).show();
+                    $('#previewImgLap2').hide();
+                } else if (fileExtension === 'jpg' || fileExtension === 'png' || fileExtension === 'jpeg' ||
+                    fileExtension === 'webp') {
+                    $('#previewImgLap2').attr('src', fileUrl).show();
+                    $('#previewPdfLap2').hide();
+                }
             }
 
-            $('#kalibrasi_idLap').val(id);
+            $('#pengajuan_idLap').val(id);
             $('#checkModalLap').modal('show');
         }
 
         $('#uploadModalLap').on('hidden.bs.modal', function() {
             $('#uploadFormLap').trigger('reset');
+            $('#previewImgLap').hide().attr('src', '');
             $('#previewPdfLap').hide().attr('src', ''); // Menyembunyikan dan menghapus sumber pratinjau PDF
         });
 
         function previewFileLap(input) {
             var file = input.files[0];
-            if (file.type === "application/pdf") {
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    $('#previewPdfLap').attr("src", e.target.result).show();
-                };
+            var fileExtension = file.name.split('.').pop().toLowerCase();
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                $('#previewPdfLap').hide().attr('src', '');
+                $('#previewImgLap').hide().attr('src', '');
+
+                if (file.type === "application/pdf") {
+                    $('#previewPdfLap').attr('src', e.target.result).show();
+                } else if (['jpg', 'jpeg', 'png', 'webp'].includes(fileExtension)) {
+                    $('#previewImgLap').attr('src', e.target.result).show();
+                }
+            };
+
+            if (file) {
                 reader.readAsDataURL(file);
             }
         }
@@ -675,7 +701,8 @@
             // Reset form dan pratinjau ketika membuka modal
             $('#uploadFormAnalis').trigger('reset');
             $('#previewPdfAnalis').hide(); // Sembunyikan pratinjau PDF terlebih dahulu
-            $('#previewWordAnalis').hide();
+            $('#previewWordLinkAnalis').hide().attr('src', ''); // Sembunyikan dan kosongkan pratinjau Word
+            $('#previewImgAnalis').hide().attr('src', ''); // Sembunyikan dan kosongkan pratinjau gambar
 
             // Menentukan jenis file berdasarkan ekstensi
             var fileExtension = fileUrl.split('.').pop().toLowerCase();
@@ -688,6 +715,14 @@
                     $('#previewWordAnalis').attr('src', fileUrl).show();
                     $('#previewPdfAnalis').hide();
                 }
+
+                if (fileExtension === 'pdf') {
+                    $('#previewPdfAnalis').attr('src', fileUrl).show();
+                } else if (['jpg', 'jpeg', 'png', 'webp'].includes(fileExtension)) {
+                    $('#previewImgAnalis').attr('src', fileUrl).show();
+                } else {
+                    $('#previewWordLinkAnalis').attr('href', fileUrl).text("Download Berkas").show();
+                }
             }
 
             $('#kalibrasi_idAnalis').val(id);
@@ -697,7 +732,8 @@
         function openCheckModalAnalis(id, fileUrl) {
             $('#uploadFormAnalis').trigger('reset');
             $('#previewPdfAnalis2').hide();
-            $('#previewWordAnalis2').hide();
+            $('#previewWordLinkAnalis2').hide();
+            $('#previewImgAnalis2').hide();
 
             // Menentukan jenis file berdasarkan ekstensi
             var fileExtension = fileUrl.split('.').pop().toLowerCase();
@@ -705,10 +741,17 @@
             if (fileUrl) {
                 if (fileExtension === 'pdf') {
                     $('#previewPdfAnalis2').attr('src', fileUrl).show();
-                    $('#previewWordAnalis2').hide();
-                } else {
-                    $('#previewWordAnalis2').attr('src', fileUrl).show();
+                    $('#previewWordLinkAnalis2').hide();
+                    $('#previewImgAnalis2').hide();
+                } else if (fileExtension === 'jpg' || fileExtension === 'png' || fileExtension === 'jpeg' ||
+                    fileExtension === 'webp') {
+                    $('#previewImgAnalis2').attr('src', fileUrl).show();
+                    $('#previewWordLinkAnalis2').hide();
                     $('#previewPdfAnalis2').hide();
+                } else {
+                    $('#previewWordLinkAnalis2').attr('href', fileUrl).text("Download").show();
+                    $('#previewPdfAnalis2').hide();
+                    $('#previewImgAnalis2').hide();
                 }
             }
 

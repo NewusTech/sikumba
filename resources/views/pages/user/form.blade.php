@@ -22,7 +22,8 @@
                         <div class="card-body">
                             <small>Upload Surat Permohonan</small>
                             <div class="form-group">
-                                <label for="file" class="custom-file-label">Pilih Berkas (PDF / Foto)</label>
+                                <label for="file" class="custom-file-label">Pilih Berkas (PDF / Foto)</label> 
+                                <small style="margin-left: 2px; font-size: 11px">maks 2 MB</small>
                                 <input type="file" class="form-control" id="file" name="file"
                                     accept=".pdf, .jpg, .jpeg, .png">
                             </div>
@@ -50,43 +51,6 @@
                                         @enderror
                                     </div>
                                 </div>
-                                {{-- <div class="col-md-6"> <input class="form-control" type="date" name="date"
-               value="{{ auth()->user()->date ? auth()->user()->date->format('Y-m-d') : '' }}"
-               min="{{ \Carbon\Carbon::today()->format('Y-m-d') }}">
-        @error('date')
-            <span class="text-danger">{{ $message }}</span>
-        @enderror
-                                    <div class="form-group">
-                                        <label for="example-text-input" class="form-control-label">Sealing Mark</label>
-                                        <input class="form-control" type="text" name="sealingmark"
-                                            value="{{ auth()->check() ? auth()->user()->sealingmark : '' }}">
-                                        @error('sealingmark')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div> --}}
-                                {{-- <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="example-text-input" class="form-control-label">Report of Sampling</label>
-                                        <input class="form-control" type="text" name="reportsealing"
-                                            value="{{ auth()->check() ? auth()->user()->reportsealing : '' }}">
-                                        @error('reportsealing')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div> --}}
-                                {{-- <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="example-text-input" class="form-control-label">Consignment of
-                                            Commodity ( Jenis Pengiriman )</label>
-                                        <input class="form-control" type="text" id="consignmentcommodity"
-                                            name="consignment"
-                                            value="{{ auth()->check() ? auth()->user()->consignment : '' }}">
-                                        @error('consignment')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div> --}}
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="example-text-input" class="form-control-label">Identification of

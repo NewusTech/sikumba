@@ -26,22 +26,14 @@
                 <td class="border">{{ $item->area_kalibrasi }}</td>
                 <td class="text-center text-nowrap border">
                     @if ($item->status == 8)
-                        @if ($item->user_confirm == 0)
-                            {{-- <form
-                                action="{{ route('approvekalibrasiBayar', ['id' => $item->id]) }}"
-                                method="post">
-                                @csrf --}}
-                                <button
-                                    onclick="openUploadModal({{ $item->id }}, '{{ $item->berkas ? asset('storage/' . $item->berkas) : '' }}')"
-                                    class="btn btn-primary mb-0">Konfirmasi<br>
-                                    Pembayaran</button>
+                        @if ($item->admin_confirm == 0)
+                            <button
+                                onclick="openUploadModal({{ $item->id }}, '{{ $item->berkas ? asset('storage/' . $item->berkas) : '' }}')"
+                                class="btn btn-primary mb-0">Konfirmasi<br>
+                                Pembayaran</button>
                             {{-- </form> --}}
-                        @elseif ($item->user_confirm == 1)
-                            @if ($item->admin_confirm == 0)
-                                <span>Menunggu konfimrasi <br> pembayaran</span>
-                            @elseif($item->admin_confirm == 1)
-                                <span class="text-success">Proses selesai</span>
-                            @endif
+                        @elseif ($item->admin_confirm == 1)
+                            <span class="text-success">Proses selesai</span>
                         @endif
                     @else
                         <span>Sedang diproses</span>
@@ -51,15 +43,14 @@
                 <td class="text-center text-nowrap border">
                     @if ($item->status == 8 && $item->user_confirm == 1 && $item->admin_confirm == 1)
                         @if ($item->done_survey == 0)
-                            <button type="button" class="btn btn-primary mt-3"
-                                data-toggle="modal" data-target="#surveyModal"
-                                data-id="{{ $item->id }}">
+                            <button type="button" class="btn btn-primary mt-3" data-toggle="modal"
+                                data-target="#surveyModal" data-id="{{ $item->id }}">
                                 Kirim Survey
                             </button>
                         @else
                             @if ($item->berkas)
-                                <a href="{{ asset('storage/' . $item->berkas) }}"
-                                    class="mb-0 btn btn-primary" target="_blank">Print
+                                <a href="{{ asset('storage/' . $item->berkas) }}" class="mb-0 btn btn-primary"
+                                    target="_blank">Print
                                     Sertifikat</a>
                                 <br>
                             @endif

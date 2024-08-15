@@ -95,9 +95,9 @@
                             <img id="previewImgLap" src="" style="max-width: 100%; display: none;">
                             <embed id="previewPdfLap" src="" type="application/pdf"
                                 style="width: 100%; height: 500px; display: none;">
-                            <iframe id="previewWordLap" src=""
-                                style="width: 0%; height: 0; display: none;"></iframe>
-
+                            <a id="previewWordLinkLap" href="#"
+                                style="display: none; color: rgb(0, 140, 255); font-size: 13px" download>Download Word
+                                File</a>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -128,8 +128,9 @@
                         <label for="berkas_laporan">Berkas</label>
 
                         <img id="previewImgLap2" src="" style="max-width: 100%; display: none;">
-                        <iframe id="previewWordLap2" src=""
-                            style="width: 0%; height: 0; display: none;"></iframe>
+                        <a id="previewWordLinkLap2" href="#"
+                            style="display: none; color: rgb(0, 140, 255); font-size: 13px" download>Download Word
+                            File</a>
                         <embed id="previewPdfLap2" src="" type="application/pdf"
                             style="width: 100%; height: 500px; display: none;">
                     </div>
@@ -160,14 +161,16 @@
                         <input type="hidden" name="pengajuan_idAnalis" id="pengajuan_idAnalis">
                         <div class="form-group">
                             <label for="berkas_analis">Choose</label>
+                            <small style="font-size: small">(PDF / Foto / Excel / Word)</small>
                             <input type="file" class="form-control" id="berkas_analis" name="berkas_analis"
                                 onchange="previewFileAnalis(this);"
                                 accept=".pdf, .doc, .docx, .xls, .xlsx, .jpg, .jpeg, .png">
                             <img id="previewImgAnalis" src="" style="max-width: 100%; display: none;">
                             <embed id="previewPdfAnalis" src="" type="application/pdf"
                                 style="width: 100%; height: 500px; display: none;">
-                            <iframe id="previewWordAnalis" src=""
-                                style="width: 0%; height: 0; display: none;"></iframe>
+                            <a id="previewWordLinkAnalis" href="#"
+                                style="display: none; color: rgb(0, 140, 255); font-size: 13px" download>Download Word
+                                File</a>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -197,10 +200,10 @@
                     <div class="form-group">
                         <label for="berkas_analis">Berkas</label>
                         <img id="previewImgAnalis2" src="" style="max-width: 100%; display: none;">
-                        <iframe id="previewWordAnalis2" src=""
-                            style="width: 0%; height: 0; display: none;"></iframe>
                         <embed id="previewPdfAnalis2" src="" type="application/pdf"
                             style="width: 100%; height: 500px; display: none;">
+                        <a id="previewWordLinkAnalis2" href="#"
+                            style="display: none; color: rgb(0, 140, 255); font-size: 13px" download>Download Word File</a>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -351,22 +354,15 @@
                                                     @elseif ($item->status > 0 && $item->status < 8)
                                                         <span class="text-success">Registered</span>
                                                     @elseif ($item->status == 8)
-                                                        @if ($item->berkas)
-                                                            <form action="{{ route('approve', ['id' => $item->id]) }}"
-                                                                method="post">
-                                                                @csrf
-                                                                <button type="submit" class="btn btn-primary mb-0"
-                                                                    onclick="return confirm('Apakah Anda yakin ingin menyetujui ini?')">Approval
-                                                                    by UPTD??</button>
-                                                            </form>
-                                                        @else
-                                                            <button title="Upload sertifikat terlebih dahulu"
-                                                                class="btn btn-secondary mb-0">Approval by UPTD??</button>
-                                                        @endif
+                                                        {{-- @if ($item->berkas) --}}
+                                                        <form action="{{ route('approve', ['id' => $item->id]) }}"
+                                                            method="post">
+                                                            @csrf
+                                                            <button type="submit" class="btn btn-primary mb-0"
+                                                                onclick="return confirm('Apakah Anda yakin ingin menyetujui ini?')">Approval
+                                                                by UPTD??</button>
+                                                        </form>
                                                     @elseif ($item->status == 9 && $item->admin_confirm == 0)
-                                                        {{-- @if ($item->user_confirm == 0)
-                                                            <span class="text-success">Menunggu <br> Pembayaran</span>
-                                                        @elseif ($item->user_confirm == 1) --}}
                                                         <button
                                                             onclick="openUploadModalApprove({{ $item->id }}, '{{ $item->bukti_pembayaran_pengujian ? asset('storage/' . $item->bukti_pembayaran_pengujian) : '' }}')"
                                                             class="btn btn-primary mb-0">Sudah
@@ -477,28 +473,19 @@
                                                     @elseif ($item->status > 0 && $item->status < 7)
                                                         <span class="text-success">Registered</span>
                                                     @elseif ($item->status == 7)
-                                                        @if ($item->berkas)
-                                                            <form action="{{ route('approve', ['id' => $item->id]) }}"
-                                                                method="post">
-                                                                @csrf
-                                                                <button type="submit" class="btn btn-primary mb-0"
-                                                                    onclick="return confirm('Apakah Anda yakin ingin menyetujui ini?')">Approval
-                                                                    by UPTD??</button>
-                                                            </form>
-                                                        @else
-                                                            <button title="Upload sertifikat terlebih dahulu"
-                                                                class="btn btn-secondary mb-0">Approval by UPTD??</button>
-                                                        @endif
+                                                        {{-- @if ($item->berkas) --}}
+                                                        <form action="{{ route('approve', ['id' => $item->id]) }}"
+                                                            method="post">
+                                                            @csrf
+                                                            <button type="submit" class="btn btn-primary mb-0"
+                                                                onclick="return confirm('Apakah Anda yakin ingin menyetujui ini?')">Approval
+                                                                by UPTD??</button>
+                                                        </form>
                                                     @elseif ($item->status == 8 && $item->admin_confirm == 0)
-                                                        {{-- @if ($item->user_confirm == 0)
-                                                            <span class="text-success">Menunggu <br> Pembayaran</span>
-                                                        @elseif ($item->user_confirm == 1) --}}
                                                         <button
                                                             onclick="openUploadModalApprove({{ $item->id }}, '{{ $item->bukti_pembayaran_pengujian ? asset('storage/' . $item->bukti_pembayaran_pengujian) : '' }}')"
                                                             class="btn btn-primary mb-0">Sudah
                                                             membayar... <br> Selesaikan ?</button>
-                                                        {{-- </form> --}}
-                                                        {{-- @endif --}}
                                                     @elseif ($item->status == 8 && $item->admin_confirm == 1)
                                                         <span class="text-success">Proses Selesai</span>
                                                     @endif
@@ -670,11 +657,6 @@
                                                                     onclick="openUploadModalLap({{ $item->id }}, '{{ $item->berkas_laporan ? asset('storage/' . $item->berkas_laporan) : '' }}')"
                                                                     class="btn btn-primary btn-sm mt-1 px-2">Upload
                                                                     Laporan</button>
-                                                                {{-- @elseif ($item->status > 5)
-                                                            <button
-                                                                onclick="openCheckModalLap({{ $item->id }}, '{{ $item->berkas_laporan ? asset('storage/' . $item->berkas_laporan) : '' }}')"
-                                                                class="btn btn-primary btn-sm m-0 px-2">Lihat
-                                                                Laporan</button> --}}
                                                             @else
                                                                 -
                                                             @endif
@@ -689,11 +671,6 @@
                                                                     onclick="openUploadModalLap({{ $item->id }}, '{{ $item->berkas_laporan ? asset('storage/' . $item->berkas_laporan) : '' }}')"
                                                                     class="btn btn-primary btn-sm mt-1 px-2">Upload
                                                                     Laporan</button>
-                                                                {{-- @elseif ($item->status > 6)
-                                                            <button
-                                                                onclick="openCheckModalLap({{ $item->id }}, '{{ $item->berkas_laporan ? asset('storage/' . $item->berkas_laporan) : '' }}')"
-                                                                class="btn btn-primary btn-sm m-0 px-2">Lihat
-                                                                Laporan</button> --}}
                                                             @else
                                                                 -
                                                             @endif
@@ -839,7 +816,7 @@
                 return
             }
 
-            
+
         });
 
         document.getElementById('berkas_laporan').addEventListener('change', function() {
@@ -1029,7 +1006,7 @@
             // Reset form dan pratinjau ketika membuka modal
             $('#uploadFormLap').trigger('reset');
             $('#previewPdfLap').hide(); // Sembunyikan pratinjau PDF terlebih dahulu
-            $('#previewWordLap').hide().attr('src', ''); // Sembunyikan dan kosongkan pratinjau Word
+            $('#previewWordLinkLap').hide().attr('src', '');
             $('#previewImgLap').hide().attr('src', ''); // Sembunyikan dan kosongkan pratinjau gambar
 
             if (fileUrl) {
@@ -1042,7 +1019,7 @@
                     $('#previewImgLap').attr('src', fileUrl).show();
                     $('#deleteFileButton').show();
                 } else {
-                    $('#previewWordLap').attr('src', fileUrl).show();
+                    $('#previewWordLinkLap').attr('href', fileUrl).text("Download Berkas").show();
                     $('#deleteFileButton').show();
                 }
             } else {
@@ -1056,7 +1033,7 @@
         function openCheckModalLap(id, fileUrl) {
             $('#uploadFormLap').trigger('reset');
             $('#previewPdfLap2').hide();
-            $('#previewWordLap2').hide();
+            $('#previewWordLinkLap2').hide();
             $('#previewImgLap2').hide();
 
             // Menentukan jenis file berdasarkan ekstensi
@@ -1065,15 +1042,15 @@
             if (fileUrl) {
                 if (fileExtension === 'pdf') {
                     $('#previewPdfLap2').attr('src', fileUrl).show();
-                    $('#previewWordLap2').hide();
+                    $('#previewWordLinkLap2').hide();
                     $('#previewImgLap2').hide();
                 } else if (fileExtension === 'jpg' || fileExtension === 'png' || fileExtension === 'jpeg' ||
                     fileExtension === 'webp') {
                     $('#previewImgLap2').attr('src', fileUrl).show();
-                    $('#previewWordLap2').hide();
+                    $('#previewWordLinkLap2').hide();
                     $('#previewPdfLap2').hide();
                 } else {
-                    $('#previewWordLap2').attr('src', fileUrl).show();
+                    $('#previewWordLinkLap2').attr('href', fileUrl).text("Download").show();
                     $('#previewPdfLap2').hide();
                     $('#previewImgLap2').hide();
                 }
@@ -1086,7 +1063,7 @@
         $('#uploadModalLap').on('hidden.bs.modal', function() {
             $('#uploadFormLap').trigger('reset');
             $('#previewPdfLap').hide().attr('src', '');
-            $('#previewWordLap').hide().attr('src', ''); // Menyembunyikan dan menghapus sumber pratinjau Word
+            $('#previewWordLinkLap').hide().attr('src', '');
             $('#previewImgLap').hide().attr('src', ''); // Menyembunyikan dan menghapus sumber pratinjau gambar
             $('#deleteFileButton').hide(); // Menyembunyikan tombol hapus
         });
@@ -1104,6 +1081,10 @@
                     $('#previewPdfLap').attr('src', e.target.result).show();
                 } else if (['jpg', 'jpeg', 'png', 'webp'].includes(fileExtension)) {
                     $('#previewImgLap').attr('src', e.target.result).show();
+                } else {
+                    $('#previewWordLinkLap').attr('href', fileUrl).text("Download Berkas")
+                        .show(); // Tampilkan nama file sebagai tautan
+                    $('#deleteFileButton').show();
                 }
             };
 
@@ -1144,7 +1125,7 @@
             // Reset form dan pratinjau ketika membuka modal
             $('#uploadFormAnalis').trigger('reset');
             $('#previewPdfAnalis').hide().attr('src', ''); // Sembunyikan dan kosongkan pratinjau PDF
-            $('#previewWordAnalis').hide().attr('src', ''); // Sembunyikan dan kosongkan pratinjau Word
+            $('#previewWordLinkAnalis').hide().attr('src', ''); // Sembunyikan dan kosongkan pratinjau Word
             $('#previewImgAnalis').hide().attr('src', ''); // Sembunyikan dan kosongkan pratinjau gambar
 
             if (fileUrl) {
@@ -1157,7 +1138,8 @@
                     $('#previewImgAnalis').attr('src', fileUrl).show();
                     $('#deleteFileButton').show();
                 } else {
-                    $('#previewWordAnalis').attr('src', fileUrl).show();
+                    $('#previewWordLinkAnalis').attr('href', fileUrl).text("Download Berkas")
+                        .show(); // Tampilkan nama file sebagai tautan
                     $('#deleteFileButton').show();
                 }
             } else {
@@ -1171,7 +1153,7 @@
         function openCheckModalAnalis(id, fileUrl) {
             $('#uploadFormAnalis').trigger('reset');
             $('#previewPdfAnalis2').hide();
-            $('#previewWordAnalis2').hide();
+            $('#previewWordLinkAnalis2').hide();
             $('#previewImgAnalis2').hide();
 
             // Menentukan jenis file berdasarkan ekstensi
@@ -1180,15 +1162,15 @@
             if (fileUrl) {
                 if (fileExtension === 'pdf') {
                     $('#previewPdfAnalis2').attr('src', fileUrl).show();
-                    $('#previewWordAnalis2').hide();
+                    $('#previewWordLinkAnalis2').hide();
                     $('#previewImgAnalis2').hide();
                 } else if (fileExtension === 'jpg' || fileExtension === 'png' || fileExtension === 'jpeg' ||
                     fileExtension === 'webp') {
                     $('#previewImgAnalis2').attr('src', fileUrl).show();
-                    $('#previewWordAnalis2').hide();
+                    $('#previewWordLinkAnalis2').hide();
                     $('#previewPdfAnalis2').hide();
                 } else {
-                    $('#previewWordAnalis2').attr('src', fileUrl).show();
+                    $('#previewWordLinkAnalis2').attr('href', fileUrl).text("Download").show();
                     $('#previewPdfAnalis2').hide();
                     $('#previewImgAnalis2').hide();
                 }
@@ -1201,7 +1183,7 @@
         $('#uploadModalAnalis').on('hidden.bs.modal', function() {
             $('#uploadFormAnalis').trigger('reset');
             $('#previewPdfAnalis').hide().attr('src', ''); // Menyembunyikan dan menghapus sumber pratinjau PDF
-            $('#previewWordAnalis').hide().attr('src', ''); // Menyembunyikan dan menghapus sumber pratinjau Word
+            $('#previewWordLinkAnalis').hide().attr('src', '');
             $('#previewImgAnalis').hide().attr('src', ''); // Menyembunyikan dan menghapus sumber pratinjau gambar
             $('#deleteFileButton').hide(); // Menyembunyikan tombol hapus
         });
@@ -1241,7 +1223,7 @@
                         // $('#uploadModalAnalis').modal('hide');
                         // Hapus pratinjau file dari modal
                         $('#previewPdfAnalis').hide().attr('src', '');
-                        $('#previewWordAnalis').hide().attr('src', '');
+                        $('#previewWordLinkAnalis').hide().attr('src', '');
                         $('#previewImgAnalis').hide().attr('src', '');
                         $('#deleteFileButton').hide();
 

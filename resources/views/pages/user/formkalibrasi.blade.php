@@ -24,6 +24,7 @@
                             <small>Upload Surat Permohonan</small>
                             <div class="form-group">
                                 <label for="file" class="custom-file-label">Pilih Berkas (PDF / Foto)</label>
+                                <small style="margin-left: 2px; font-size: 11px">maks 2 MB</small>
                                 <input type="file" class="form-control" id="file" name="file" accept=".pdf, .jpg, .jpeg, .png">
                             </div>
                             <div class="row">

@@ -90,7 +90,7 @@ class HistorykalibrasiController extends Controller
     public function uploadLaporan(Request $request)
     {
         $request->validate([
-            'berkas_laporan' => 'required|file|mimes:pdf|max:10000', // 2MB Max
+            'berkas_laporan' => 'required|file|max:10000',  // 2MB Max
         ]);
 
         $kalibrasi = Kalibrasi::find($request->kalibrasi_idLap);

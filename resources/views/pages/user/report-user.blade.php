@@ -99,7 +99,7 @@
                         <div class="form-group">
                             <label for="berkas">Choose</label>
                             <input type="file" class="form-control" id="berkas" name="berkas"
-                                onchange="previewFile(this);">
+                                onchange="previewFile(this);" accept=".pdf, .jpg, .jpeg, .png">
 
                             <embed id="previewPdf" src="" type="application/pdf"
                                 style="width: 100%; height: 500px; display: none;">
@@ -110,7 +110,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Upload</button>
+                        <button type="submit" class="btn btn-primary" id="uploadButton" disabled>Upload</button>
                     </div>
                 </form>
             </div>
@@ -337,6 +337,17 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
+        document.getElementById('berkas').addEventListener('change', function() {
+            const file = this.files[0];
+            const maxSize = 2 * 1024 * 1024; // 2 MB dalam bytes
+
+            if (file && file.size > maxSize) {
+                alert('Ukuran maksimal file adalah 2 MB');
+                this.value = ''; // Reset input file
+                return
+            }
+        });
+
         $(document).ready(function() {
             // Handle live search
             $('#search').on('keyup', function() {
@@ -380,6 +391,7 @@
 
     <script>
         function openUploadModal(id, pdfUrl) {
+            $('#uploadButton').prop('disabled', true);
             // Reset form dan pratinjau ketika membuka modal
             $('#uploadForm').trigger('reset');
             $('#previewPdf').hide(); // Sembunyikan pratinjau PDF terlebih dahulu
@@ -390,17 +402,6 @@
 
             $('#bukti_id').val(id);
             $('#uploadModal').modal('show');
-        }
-
-        function openCheckModal(id, pdfUrl) {
-            $('#uploadForm').trigger('reset');
-            $('#previewPdf2').hide();
-            if (pdfUrl) {
-                $('#previewPdf2').attr('src', pdfUrl).show();
-            }
-
-            $('#bukti_id').val(id);
-            $('#checkModal').modal('show');
         }
 
         $('#uploadModal').on('hidden.bs.modal', function() {
@@ -416,6 +417,7 @@
             var imagePreview = document.getElementById('imagePreview');
 
             if (file) {
+                $('#uploadButton').prop('disabled', false);
                 var reader = new FileReader();
                 reader.onload = function(e) {
                     if (file.type === 'image/jpeg' || file.type === 'image/jpg' || file.type === 'image/png') {
