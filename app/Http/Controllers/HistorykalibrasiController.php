@@ -111,7 +111,7 @@ class HistorykalibrasiController extends Controller
     public function uploadAnalis(Request $request)
     {
         $request->validate([
-            'berkas_analis' => 'required|file|mimes:pdf,doc,docx,xls,xlsx|max:10000', // 2MB Max
+            'berkas_analis' => 'required|file|max:10000', 
         ]);
 
         $kalibrasi = Kalibrasi::find($request->kalibrasi_idAnalis);

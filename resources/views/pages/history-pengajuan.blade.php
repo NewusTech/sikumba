@@ -21,7 +21,7 @@
                         <div class="form-group">
                             <label for="berkas">Choose</label>
                             <input type="file" class="form-control" id="berkas" name="berkas"
-                                onchange="previewFile(this);" accept=".pdf, .doc, .docx, .xls, .xlsx, .jpg, .jpeg, .png">
+                                onchange="previewFile(this);" accept=".pdf, .jpg, .jpeg, .png">
 
                             <img id="previewImg" src="" style="max-width: 100%; display: none;">
                             <embed id="previewPdf" src="" type="application/pdf"
@@ -33,7 +33,7 @@
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-danger" id="deleteFileButton" style="display: none;"
                             onclick="deleteFile()">Delete</button>
-                        <button type="submit" class="btn btn-primary">Upload</button>
+                        <button type="submit" class="btn btn-primary" id="uploadButton" disabled>Upload</button>
                     </div>
                 </form>
             </div>
@@ -102,9 +102,9 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-danger" id="deleteFileButton" style="display: none;"
+                        <button type="button" class="btn btn-danger" id="deleteFileButtonLap" style="display: none;"
                             onclick="deleteFileLap()">Delete</button>
-                        <button type="submit" class="btn btn-primary">Upload</button>
+                        <button type="submit" class="btn btn-primary" id="uploadButtonLap" disabled>Upload</button>
                     </div>
                 </form>
             </div>
@@ -175,9 +175,9 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-danger" id="deleteFileButton" style="display: none;"
+                        <button type="button" class="btn btn-danger" id="deleteFileButtonAnalis" style="display: none;"
                             onclick="deleteFileAnalis()">Delete</button>
-                        <button type="submit" class="btn btn-primary">Upload</button>
+                        <button type="submit" class="btn btn-primary" id="uploadButtonAnalis" disabled>Upload</button>
                     </div>
                 </form>
             </div>
@@ -386,7 +386,6 @@
                                                     @elseif ($item->status > 2 && $item->status < 6)
                                                         <span class="text-success">Bookkeeping</span>
                                                     @elseif ($item->status == 6)
-                                                        {{-- @if ($item->berkas_laporan) --}}
                                                         <form action="{{ route('approve', ['id' => $item->id]) }}"
                                                             method="post">
                                                             @csrf
@@ -394,11 +393,6 @@
                                                                 onclick="return confirm('Apakah Anda yakin ingin menyetujui ini?')">Approve
                                                                 test?</button>
                                                         </form>
-                                                        {{-- @else
-                                                            <button title="Upload sertifikat terlebih dahulu"
-                                                                class="btn btn-secondary mb-0">Approve
-                                                                test?</button>
-                                                        @endif --}}
                                                     @elseif ($item->status > 6)
                                                         <span class="text-success">Approve</span>
                                                     @endif
@@ -503,7 +497,6 @@
                                                     @elseif ($item->status > 2 && $item->status < 5)
                                                         <span class="text-success">Bookkeeping</span>
                                                     @elseif ($item->status == 5)
-                                                        {{-- @if ($item->berkas_laporan) --}}
                                                         <form action="{{ route('approve', ['id' => $item->id]) }}"
                                                             method="post">
                                                             @csrf
@@ -511,11 +504,6 @@
                                                                 onclick="return confirm('Apakah Anda yakin ingin menyetujui ini?')">Approve
                                                                 test?</button>
                                                         </form>
-                                                        {{-- @else
-                                                            <button title="Upload sertifikat terlebih dahulu"
-                                                                class="btn btn-secondary mb-0">Approve
-                                                                test?</button>
-                                                        @endif --}}
                                                     @elseif ($item->status > 5)
                                                         <span class="text-success">Approve</span>
                                                     @endif
@@ -575,24 +563,12 @@
                                                                 onclick="openUploadModal({{ $item->id }}, '{{ $item->berkas ? asset('storage/' . $item->berkas) : '' }}')"
                                                                 class="btn btn-primary btn-sm m-0 px-3">Upload
                                                                 Sertifikat</button>
-                                                            {{-- @elseif ($item->type == 1 && $item->status >= 8) --}}
-                                                            {{-- DIantar --}}
-                                                            {{-- <button
-                                                            onclick="openCheckModal({{ $item->id }}, '{{ $item->berkas ? asset('storage/' . $item->berkas) : '' }}')"
-                                                            class="btn btn-primary btn-sm m-0 px-3">Lihat
-                                                            Sertifikat</button> --}}
                                                         @elseif ($item->type == 2 && $item->status >= 8)
                                                             {{-- DIambil --}}
                                                             <button
                                                                 onclick="openUploadModal({{ $item->id }}, '{{ $item->berkas ? asset('storage/' . $item->berkas) : '' }}')"
                                                                 class="btn btn-primary btn-sm mt-1 px-3">Upload
                                                                 Sertifikat</button>
-                                                            {{-- @elseif ($item->type == 2 && $item->status >= 9) --}}
-                                                            {{-- DIambil --}}
-                                                            {{-- <button
-                                                            onclick="openCheckModal({{ $item->id }}, '{{ $item->berkas ? asset('storage/' . $item->berkas) : '' }}')"
-                                                            class="btn btn-primary btn-sm m-0 px-3">Lihat
-                                                            Sertifikat</button> --}}
                                                         @else
                                                             -
                                                         @endif
@@ -889,6 +865,7 @@
 
         function openUploadModal(id, fileUrl) {
             // Reset form dan pratinjau ketika membuka modal
+            $('#uploadButton').prop('disabled', true);
             $('#uploadForm').trigger('reset');
             $('#previewPdf').hide(); // Sembunyikan pratinjau PDF terlebih dahulu
             $('#previewWord').hide().attr('src', ''); // Sembunyikan dan kosongkan pratinjau Word
@@ -970,6 +947,7 @@
             };
 
             if (file) {
+                $('#uploadButton').prop('disabled', false);
                 reader.readAsDataURL(file);
             }
         }
@@ -1003,6 +981,7 @@
         }
 
         function openUploadModalLap(id, fileUrl) {
+            $('#uploadButtonLap').prop('disabled', true);
             // Reset form dan pratinjau ketika membuka modal
             $('#uploadFormLap').trigger('reset');
             $('#previewPdfLap').hide(); // Sembunyikan pratinjau PDF terlebih dahulu
@@ -1014,16 +993,16 @@
 
                 if (fileExtension === 'pdf') {
                     $('#previewPdfLap').attr('src', fileUrl).show();
-                    $('#deleteFileButton').show();
+                    $('#deleteFileButtonLap').show();
                 } else if (['jpg', 'jpeg', 'png', 'webp'].includes(fileExtension)) {
                     $('#previewImgLap').attr('src', fileUrl).show();
-                    $('#deleteFileButton').show();
+                    $('#deleteFileButtonLap').show();
                 } else {
                     $('#previewWordLinkLap').attr('href', fileUrl).text("Download Berkas").show();
-                    $('#deleteFileButton').show();
+                    $('#deleteFileButtonLap').show();
                 }
             } else {
-                $('#deleteFileButton').hide();
+                $('#deleteFileButtonLap').hide();
             }
 
             $('#pengajuan_idLap').val(id);
@@ -1065,7 +1044,7 @@
             $('#previewPdfLap').hide().attr('src', '');
             $('#previewWordLinkLap').hide().attr('src', '');
             $('#previewImgLap').hide().attr('src', ''); // Menyembunyikan dan menghapus sumber pratinjau gambar
-            $('#deleteFileButton').hide(); // Menyembunyikan tombol hapus
+            $('#deleteFileButtonLap').hide(); // Menyembunyikan tombol hapus
         });
 
         function previewFileLap(input) {
@@ -1084,11 +1063,12 @@
                 } else {
                     $('#previewWordLinkLap').attr('href', fileUrl).text("Download Berkas")
                         .show(); // Tampilkan nama file sebagai tautan
-                    $('#deleteFileButton').show();
+                    $('#deleteFileButtonLap').show();
                 }
             };
 
             if (file) {
+                $('#uploadButtonLap').prop('disabled', false);
                 reader.readAsDataURL(file);
             }
         }
@@ -1109,7 +1089,7 @@
                         $('#previewPdfLap').hide().attr('src', '');
                         $('#previewWordLap').hide().attr('src', '');
                         $('#previewImgLap').hide().attr('src', '');
-                        $('#deleteFileButton').hide();
+                        $('#deleteFileButtonLap').hide();
 
                         fetch_data();
                         // Optionally, you can refresh the page or update the UI to reflect the deletion
@@ -1122,6 +1102,7 @@
         }
 
         function openUploadModalAnalis(id, fileUrl) {
+            $('#uploadButtonAnalis').prop('disabled', true);
             // Reset form dan pratinjau ketika membuka modal
             $('#uploadFormAnalis').trigger('reset');
             $('#previewPdfAnalis').hide().attr('src', ''); // Sembunyikan dan kosongkan pratinjau PDF
@@ -1133,17 +1114,16 @@
 
                 if (fileExtension === 'pdf') {
                     $('#previewPdfAnalis').attr('src', fileUrl).show();
-                    $('#deleteFileButton').show();
+                    $('#deleteFileButtonAnalis').show();
                 } else if (['jpg', 'jpeg', 'png', 'webp'].includes(fileExtension)) {
                     $('#previewImgAnalis').attr('src', fileUrl).show();
-                    $('#deleteFileButton').show();
+                    $('#deleteFileButtonAnalis').show();
                 } else {
-                    $('#previewWordLinkAnalis').attr('href', fileUrl).text("Download Berkas")
-                        .show(); // Tampilkan nama file sebagai tautan
-                    $('#deleteFileButton').show();
+                    $('#previewWordLinkAnalis').attr('href', fileUrl).text("Download Berkas").show(); // Tampilkan nama file sebagai tautan
+                    $('#deleteFileButtonAnalis').show();
                 }
             } else {
-                $('#deleteFileButton').hide();
+                $('#deleteFileButtonAnalis').hide();
             }
 
             $('#pengajuan_idAnalis').val(id);
@@ -1185,7 +1165,7 @@
             $('#previewPdfAnalis').hide().attr('src', ''); // Menyembunyikan dan menghapus sumber pratinjau PDF
             $('#previewWordLinkAnalis').hide().attr('src', '');
             $('#previewImgAnalis').hide().attr('src', ''); // Menyembunyikan dan menghapus sumber pratinjau gambar
-            $('#deleteFileButton').hide(); // Menyembunyikan tombol hapus
+            $('#deleteFileButtonAnalis').hide(); // Menyembunyikan tombol hapus
         });
 
         function previewFileAnalis(input) {
@@ -1205,6 +1185,7 @@
             };
 
             if (file) {
+                $('#uploadButtonAnalis').prop('disabled', false);
                 reader.readAsDataURL(file);
             }
         }
@@ -1225,7 +1206,7 @@
                         $('#previewPdfAnalis').hide().attr('src', '');
                         $('#previewWordLinkAnalis').hide().attr('src', '');
                         $('#previewImgAnalis').hide().attr('src', '');
-                        $('#deleteFileButton').hide();
+                        $('#deleteFileButtonAnalis').hide();
 
                         fetch_data();
                         // Optionally, you can refresh the page or update the UI to reflect the deletion

@@ -57,7 +57,8 @@
 
                         <div class="mb-3">
                             <label for="password" class="form-label">Password (Jika ingin ganti password)</label>
-                            <input type="password" class="form-control" id="password" name="password">
+                            <input type="password" class="form-control" id="password" name="password" autocomplete="new-password">
+
                             @error('password')
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror

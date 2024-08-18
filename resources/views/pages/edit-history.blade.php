@@ -20,7 +20,7 @@
                                 <div class="col-md-6 mb-3">
                                     <label for="keterangan" class="form-label">Biaya Layanan</label>
                                     <input type="file" class="form-control" id="file" name="file"
-                                        onchange="previewFile(this)">
+                                        onchange="previewFile(this)" accept=".pdf, .jpg, .jpeg, .png">
                                     <div id="preview-container" style="display: none;">
                                         <img id="preview-image" src="#" alt="Preview"
                                             style="max-width: 200px; max-height: 200px; display: none;">
@@ -186,24 +186,43 @@
     </div>
 
     <script>
+        document.getElementById('file').addEventListener('change', function() {
+            const file = this.files[0];
+            const maxSize = 2 * 1024 * 1024; // 2 MB dalam bytes
+
+            if (file && file.size > maxSize) {
+                alert('Ukuran maksimal file adalah 2 MB');
+                this.value = ''; // Reset input file
+                return
+            }
+        });
+
         function previewFile(input) {
+            const maxSize = 2 * 1024 * 1024;
             var previewContainer = document.getElementById('preview-container');
             var previewImage = document.getElementById('preview-image');
             var previewPdf = document.getElementById('preview-pdf');
             var file = input.files[0];
             var reader = new FileReader();
 
-            reader.onloadend = function() {
-                if (file.type === "application/pdf") {
-                    previewPdf.src = reader.result;
-                    previewPdf.style.display = 'block';
-                    previewImage.style.display = 'none';
-                } else {
-                    previewImage.src = reader.result;
-                    previewImage.style.display = 'block';
-                    previewPdf.style.display = 'none';
+            if (file && file.size <= maxSize) {
+                reader.onloadend = function() {
+                    if (file.type === "application/pdf") {
+                        previewPdf.src = reader.result;
+                        previewPdf.style.display = 'block';
+                        previewImage.style.display = 'none';
+                    } else {
+                        previewImage.src = reader.result;
+                        previewImage.style.display = 'block';
+                        previewPdf.style.display = 'none';
+                    }
+                    previewContainer.style.display = 'block';
                 }
-                previewContainer.style.display = 'block';
+            } else {
+                previewPdf.src = null;
+                previewImage.src = null;
+                previewPdf.style.display = 'none';
+                previewImage.style.display = 'none';
             }
 
             if (file) {

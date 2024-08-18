@@ -29,7 +29,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Upload</button>
+                        <button type="submit" class="btn btn-primary" id="uploadButton" disabled>Upload</button>
                     </div>
                 </form>
             </div>
@@ -92,7 +92,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Upload</button>
+                        <button type="submit" class="btn btn-primary" id="uploadButtonLap" disabled>Upload</button>
                     </div>
                 </form>
             </div>
@@ -161,7 +161,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Upload</button>
+                        <button type="submit" class="btn btn-primary" id="uploadButtonAnalis" disable>Upload</button>
                     </div>
                 </form>
             </div>
@@ -584,6 +584,7 @@
 
     <script>
         function openUploadModal(id, pdfUrl) {
+            $('#uploadButton').prop('disabled', true);
             // Reset form dan pratinjau ketika membuka modal
             $('#uploadForm').trigger('reset');
             $('#previewPdf').hide(); // Sembunyikan pratinjau PDF terlebih dahulu
@@ -615,6 +616,7 @@
         function previewFile(input) {
             var file = input.files[0];
             if (file.type === "application/pdf") {
+                $('#uploadButton').prop('disabled', false);
                 var reader = new FileReader();
                 reader.onload = function(e) {
                     $('#previewPdf').attr("src", e.target.result).show();
@@ -626,6 +628,7 @@
 
     <script>
         function openUploadModalLap(id, pdfUrl) {
+            $('#uploadButtonLap').prop('disabled', true);
             // Reset form dan pratinjau ketika membuka modal
             $('#uploadFormLap').trigger('reset');
             $('#previewPdfLap').hide(); // Sembunyikan pratinjau PDF terlebih dahulu
@@ -684,8 +687,10 @@
                 $('#previewImgLap').hide().attr('src', '');
 
                 if (file.type === "application/pdf") {
+                    $('#uploadButtonLap').prop('disabled', false);
                     $('#previewPdfLap').attr('src', e.target.result).show();
                 } else if (['jpg', 'jpeg', 'png', 'webp'].includes(fileExtension)) {
+                    $('#uploadButtonLap').prop('disabled', false);
                     $('#previewImgLap').attr('src', e.target.result).show();
                 }
             };
@@ -698,6 +703,7 @@
 
     <script>
         function openUploadModalAnalis(id, fileUrl) {
+            $('#uploadButtonAnalis').prop('disabled', true);
             // Reset form dan pratinjau ketika membuka modal
             $('#uploadFormAnalis').trigger('reset');
             $('#previewPdfAnalis').hide(); // Sembunyikan pratinjau PDF terlebih dahulu
@@ -767,11 +773,22 @@
 
         function previewFileAnalis(input) {
             var file = input.files[0];
-            if (file.type === "application/pdf") {
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    $('#previewPdfAnalis').attr("src", e.target.result).show();
-                };
+            var fileExtension = file.name.split('.').pop().toLowerCase();
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                $('#previewPdfAnalis').hide().attr('src', '');
+                $('#previewImgAnalis').hide().attr('src', '');
+
+                if (file.type === "application/pdf") {
+                    $('#previewPdfAnalis').attr('src', e.target.result).show();
+                } else if (['jpg', 'jpeg', 'png', 'webp'].includes(fileExtension)) {
+                    $('#previewImgAnalis').attr('src', e.target.result).show();
+                }
+            };
+
+            if (file) {
+                $('#uploadButtonAnalis').prop('disabled', false);
                 reader.readAsDataURL(file);
             }
         }
